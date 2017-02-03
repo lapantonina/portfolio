@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="homepage">
+    <meta name="author" content="lapantonina">
+
+    <title>Learning Python. Exercises</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/static/css/custom.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body data-spy="scroll" data-target="#navigation" data-offset="120">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="">Home</a>
+                    <ul class="nav navbar-nav">
+                    <li><a href="./contact">Contact form</a></li>
+                    <li><a href="./admin/">admin entry</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container wrapper">
+        <div class="container">
+
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">My Exercises
+                        <small>(based on random thoughts and ideas)</small>
+                    </h1>
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <!-- Project One -->
+            <div class="row">
+                <div class="col-md-7">
+                    <img class="img-responsive" src="/static/img/maze_cover.png" alt="maze generator">
+                </div>
+                <div class="col-md-5">
+                    <h3>Maze</h3>
+                    <h4>Simple maze generator</h4>
+                    <p>Here's a simple maze generator made on array basis.</p>
+                        {% if errors %}
+                    <ul>
+                        {% for error in errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    <form action="/maze" method="get">{% csrf_token %}
+                        <p><b>Specify the size of your maze (HxW):</b></p>
+                        <p><input type="number" class="form-control bfh-number small_number" name="h" min="1" max="300" required="True"> x <input type="number" class="form-control bfh-number small_number" name="w" min="1" max="300" required="True"></p>
+                        <p><input type="submit" class="btn btn-primary" value="Generate my maze!"></p>
+                    </form>
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <hr>
+
+            <!-- Project Two -->
+            <div class="row">
+                <div class="col-md-7">
+                    <img class="img-responsive" src="/static/img/f_api_cover.png" alt="">
+                </div>
+                <div class="col-md-5">
+                    <h3>Flickr API using</h3>
+                    <h4>Search photos by url-username</h4>
+                    <p>Did you know it could be several users with the same username on Flickr? That's why sometimes you can't get the correct user_id to get person's photos by API. Here you can find the photos using url-username (the unique one).</p>
+                        {% if errors %}
+                    <ul>
+                        {% for error in errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    <form action="/photos_of_" method="get">{% csrf_token %}
+                        <p>Username: <input type="char" class="form-control username" minlength="1" maxlength="60" name="username" required="True"></p>
+                        <p><input type="submit" class="btn btn-primary" value="Find public photos"></p>
+                    </form>
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <hr>
+
+            <!-- Project Three -->
+            <div class="row">
+                <div class="col-md-7">
+                    <img class="img-responsive" src="http://placehold.it/700x300" alt="">
+                </div>
+                <div class="col-md-5">
+                    <h3>Project Three</h3>
+                    <h4>Subheading</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis, temporibus, dolores, at, praesentium ut unde repudiandae voluptatum sit ab debitis suscipit fugiat natus velit excepturi amet commodi deleniti alias possimus!</p>
+                    <form action="/current_exchange_rate" method="get">{% csrf_token %}
+                        <input type="submit" class="btn btn-primary" value="SHOW"></p>
+                    </form>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+    </div>
+
+    <footer style="background-color: #333333;" class="section-inverse">
+        <div class="container"> 
+            <div class="row copyright">
+                <div class="col-md-6">
+                <p>&copy;2017 Loutique</p>
+                </div>
+                <div class="col-md-6">
+                <p class="credit">Template by <a href="http://bootstrapious.com/landing-pages">Bootstrapious &mdash; Bootstrap Landing Pages</a></p>
+                <!-- Please do not remove the backlink to us. It is part of the licence conditions. Thanks for understanding :)
+                -->
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- /.container -->
+
+    <!-- jQuery -->
+    <script src="/static/js/jquery-1.11.0.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/static/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

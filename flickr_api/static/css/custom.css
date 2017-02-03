@@ -1,0 +1,150 @@
+html {
+	height: 100%;
+	width: 100%;
+}
+
+
+body {
+	padding-top: 70px;
+	height: 100%;
+	width: 100%;
+
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+    display: flex;
+}
+
+.wrapper {
+    min-height: calc(100vh - 200px); /* doesn't work in safari (bug) */
+}
+
+footer {
+	height: 80px;
+	margin-top: 50px;
+}
+
+.after_header {
+	margin-top: 70px;
+}
+
+.container{
+	flex: 0 1 auto;
+}
+
+.pagination>li>a {
+	width: 48px;
+	margin-left: 0;
+	margin-bottom: 6px;
+	margin-right: 6px;
+}
+
+.pagination>li:first-child>a, .pagination>li:last-child>a {
+	width: 48px;
+	margin-left: 0;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.thumbs_padding_compensation {
+	margin-right: -24px;
+    margin-left: -24px;
+}
+
+.form-control {
+	display: inline;
+}
+
+.small_number {
+	width: 15%;
+}
+
+.username {
+	width: 32%;
+}
+
+.theme {
+	width: 66%;
+}
+.navbar {
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-style: normal;
+    font-size: 14px;
+}
+
+.navbar-default {
+	background-color: #333333;
+}
+
+.copyright {
+    margin-left: 0px;
+    margin-top: 30px;
+    margin-bottom: auto;
+    color: #eeeeee;
+    font-style: italic;
+    font-size: 16px;
+    font-family: "Cardo", "Times New Roman", Times, serif;
+}
+
+/* maze css */
+.space {
+	width: 30px;
+	height: 10px;
+	float: left;
+}
+.high_space {
+	width: 10px;
+	height: 30px;
+	float: left;
+}
+.start {
+	width: 10px;
+	height: 30px;
+	float: left;
+}
+.runner {
+	width: 30px;
+	height: 30px;
+	background-image: url(/static/img/runner.png);
+	float: left;
+}
+.invsbl {
+	opacity: 0;
+}
+.semi-invsbl {
+	opacity: 0.7;
+}
+.line_hor {
+	width: 30px;
+	height: 10px;
+	background-image: url(/static/img/line_hor.jpg);
+	float: left;
+}
+.finish {
+	width: 30px;
+	height: 10px;
+	background-image: url(/static/img/line_hor.jpg);
+	visibility: hidden;
+	float: left;
+}
+.line_ver {
+	width: 10px;
+	height: 30px;
+	background-image: url(/static/img/line_ver.jpg);
+	float: left;
+}
+.corner {
+	width: 10px;
+	height: 10px;
+	background-image: url(/static/img/corner.jpg);
+	float: left;
+}
+.maze-size {
+	width: 70px;
+}
+
+.btn {
+    margin-bottom: 2px;
+}

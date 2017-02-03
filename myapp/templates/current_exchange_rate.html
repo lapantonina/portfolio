@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="maze_generator">
+  <meta name="author" content="lapantonina">
+  
+  <title>Maze</title>  
+  <!-- Bootstrap Core CSS -->
+  <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link href="/static/css/custom.css" rel="stylesheet">
+
+</head>
+
+<body data-spy="scroll" data-target="#navigation" data-offset="120">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <ul class="nav navbar-nav">
+          <li><a href="..">Home</a></li>
+          <li><a href="../contact">Contact form</a></li>
+          <li><a href="../admin/">admin entry</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+<!-- Content -->
+  <div class="container wrapper">
+    <div class="container">
+      <div id="chartContainer" class="row" style="height: 300px; width: 100%; margin: 50px 5px auto">
+        <script src="//www.chartjs.org/assets/Chart.min.js"></script>
+        <canvas id="updating-chart" width="500" height="300"></canvas>
+        <script type="text/javascript">
+          window.onload = function () {
+            var canvas = document.getElementById('updating-chart'),
+              ctx = canvas.getContext('2d'),
+              startingData = {
+                labels: [1, 2, 3, 4, 5, 6, 7],
+                datasets: [
+                    {
+                        fillColor: "rgba(220,220,220,0.2)",
+                        strokeColor: "rgba(220,220,220,1)",
+                        pointColor: "rgba(220,220,220,1)",
+                        pointStrokeColor: "#fff",
+                        data: [0, 0, 0, 0, 0, 0, 0]
+                    },
+                    {
+                        fillColor: "rgba(151,187,205,0.2)",
+                        strokeColor: "rgba(151,187,205,1)",
+                        pointColor: "rgba(151,187,205,1)",
+                        pointStrokeColor: "#fff",
+                        data: [0, 0, 0, 0, 0, 0, 0]
+                    }
+                ]
+              },
+              latestLabel = startingData.labels[6];
+
+
+
+
+          // Reduce the animation steps for demo clarity.
+            var myLiveChart = new Chart(ctx).Line(startingData, {animationSteps: 15});
+
+
+            setInterval(function(){
+
+              var lowest_ask = "{{ lowest_ask }}";
+              var highest_bid = "{{ highest_bid }}";
+            
+              // Add two random numbers for each dataset
+              myLiveChart.addData([lowest_ask, highest_bid], ++latestLabel);
+              // Remove the first point so we dont just add values forever
+              myLiveChart.removeData();
+            }, 30000);
+          }
+          </script>
+      </div>
+    </div>
+  </div>
+
+  <footer style="background-color: #333333;" class="section-inverse">
+    <div class="container"> 
+      <div class="row copyright">
+        <div class="col-md-6">
+        <p>&copy;2017 Loutique</p>
+        </div>
+        <div class="col-md-6">
+        <p class="credit">Template by <a href="http://bootstrapious.com/landing-pages">Bootstrapious &mdash; Bootstrap Landing Pages</a></p>
+        <!-- Please do not remove the backlink to us. It is part of the licence conditions. Thanks for understanding :)-->
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+
+
+<!-- jQuery -->
+<script src="/static/js/jquery-1.11.0.min.js"></script>
+<script src="/static/js/maze.js"></script>
+<script src="/static/js/bootbox.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/static/js/bootstrap.min.js"></script>
+
+</body>
+</html>
