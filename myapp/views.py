@@ -3,7 +3,6 @@
 
 # Create your views here.
 import requests, json
-import psycopg2
 import sys
 import django.shortcuts
 import textwrap
