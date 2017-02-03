@@ -43,7 +43,7 @@ CACHES = {
 # Application definition
 
 INSTALLED_APPS = [
-    'flickr_api',
+    'portfolio_env',
     'myapp',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -63,12 +63,12 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'flickr_api.urls'
+ROOT_URLCONF = 'portfolio_env.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/home/django/flickr_api/myapp/templates',],
+        'DIRS': ['/home/django/portfolio/myapp/templates',],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,7 +82,7 @@ TEMPLATES = [
 ]
 
 
-WSGI_APPLICATION = 'flickr_api.wsgi.application'
+WSGI_APPLICATION = 'portfolio_env.wsgi.application'
 
 
 # Database
@@ -102,7 +102,7 @@ DATABASES = {
     }
 }
 
-DJANGO_SETTINGS_MODULE = 'flickr_api.settings'
+DJANGO_SETTINGS_MODULE = 'portfolio_env.settings'
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -141,7 +141,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATICFILES_DIRS = (
-    '/home/ubuntu/flickr_api' + '/static/',
+    '/home/ubuntu/portfolio' + '/static/',
 )
 
 STATIC_URL = '/static/'
