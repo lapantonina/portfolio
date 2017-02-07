@@ -24,7 +24,6 @@
         <ul class="nav navbar-nav">
           <li><a href="..">Home</a></li>
           <li><a href="../contact">Contact form</a></li>
-          <li><a href="../admin/">admin entry</a></li>
         </ul>
       </div>
     </div>
@@ -38,7 +37,7 @@
         <canvas id="updating-chart" width="500" height="300"></canvas>
         <script type="text/javascript">
           window.onload = function () {
-            var canvas = document.getElementById('updating-chart'),
+            let canvas = document.getElementById('updating-chart'),
               ctx = canvas.getContext('2d'),
               startingData = {
                 labels: [1, 2, 3, 4, 5, 6, 7],
@@ -65,13 +64,13 @@
 
 
           // Reduce the animation steps for demo clarity.
-            var myLiveChart = new Chart(ctx).Line(startingData, {animationSteps: 15});
+            let myLiveChart = new Chart(ctx).Line(startingData, {animationSteps: 15});
 
 
             setInterval(function(){
 
-              var lowest_ask = "{{ lowest_ask }}";
-              var highest_bid = "{{ highest_bid }}";
+              let lowest_ask = "{{ lowest_ask }}";
+              let highest_bid = "{{ highest_bid }}";
             
               // Add two random numbers for each dataset
               myLiveChart.addData([lowest_ask, highest_bid], ++latestLabel);
@@ -79,6 +78,9 @@
               myLiveChart.removeData();
             }, 30000);
           }
+
+
+          let Request = CreateRequest();
           </script>
       </div>
     </div>
@@ -102,7 +104,7 @@
 
 <!-- jQuery -->
 <script src="/static/js/jquery-1.11.0.min.js"></script>
-<script src="/static/js/maze.js"></script>
+<script src="/static/js/exchange.js"></script>
 <script src="/static/js/bootbox.min.js"></script>
 
 <!-- Bootstrap Core JavaScript -->

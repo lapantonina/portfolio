@@ -34,7 +34,6 @@
                     <a class="navbar-brand" href="">Home</a>
                     <ul class="nav navbar-nav">
                     <li><a href="./contact">Contact form</a></li>
-                    <li><a href="./admin/">admin entry</a></li>
                     </ul>
                 </div>
             </div>
@@ -73,7 +72,7 @@
                     {% endif %}
                     <form action="/maze" method="get">{% csrf_token %}
                         <p><b>Specify the size of your maze (HxW):</b></p>
-                        <p><input type="number" class="form-control bfh-number small_number" name="h" min="1" max="300" required="True"> x <input type="number" class="form-control bfh-number small_number" name="w" min="1" max="300" required="True"></p>
+                        <p><input type="number" class="form-control bfh-number small_number" name="h" min="1" max="100" required="True"> x <input type="number" class="form-control bfh-number small_number" name="w" min="1" max="100" required="True"></p>
                         <p><input type="submit" class="btn btn-primary" value="Generate my maze!"></p>
                     </form>
                 </div>
@@ -89,8 +88,8 @@
                 </div>
                 <div class="col-md-5">
                     <h3>Flickr API using</h3>
-                    <h4>Search photos by url-username</h4>
-                    <p>Did you know it could be several users with the same username on Flickr? That's why sometimes you can't get the correct user_id to get person's photos by API. Here you can find the photos using url-username (the unique one).</p>
+                    <h4>Оvercoming the flickr api problem</h4>
+                    <p>Did you know it could be several users with the same username on Flickr (due to Flickr been sold to yahoo)? That's why sometimes you can't get the correct user_id to get person's photos by API. Here you can find the photos using url-username (the unique one).</p>
                         {% if errors %}
                     <ul>
                         {% for error in errors %}

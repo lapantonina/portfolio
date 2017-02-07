@@ -28,9 +28,9 @@ with open('/etc/flickr_api_s_key.txt') as f:
     SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'pipni.ga', 'www.pipni.ga']
 
 CSRF_COOKIE_SECURE = True
 
@@ -150,9 +150,11 @@ STATICFILES_DIRS = (
 STATIC_URL = '/static/'
 
 
-EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'AntoninaCurafina@gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 with open('/etc/email_host_password.txt') as f:
     EMAIL_HOST_PASSWORD = f.read().strip()

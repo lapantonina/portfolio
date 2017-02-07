@@ -9,11 +9,11 @@ urlpatterns = [
 
 	url(r'^admin/', include(admin.site.urls)),
 	url(r'^$', views.home_page, name='home'),
-	url(r'^photos_of_$', views.user_photos),
-	url(r'^maze$', views.maze),
+	url(r'^photos_of_$', views.user_photos, name='flickr_api'),
+	url(r'^maze$', views.maze, name='maze'),
 	url(r'^stack$', views.stack),
-	url(r'^current_exchange_rate', views.current_exchange_rate),
-	url(r'^contact', views.contact_view),
+	url(r'^current_exchange_rate', views.current_exchange_rate, name='current_exchange_rate'),
+	url(r'^contact', views.contact_view, name='contact'),
 
 
 ]
