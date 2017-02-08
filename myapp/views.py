@@ -2,11 +2,13 @@
 # -*- coding: utf-8 -*-
 
 # Create your views here.
+import os
 import requests, json
 import sys
 import django.shortcuts
 import textwrap
 import math, time, datetime, random
+from django.conf import settings
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse, Http404
 from django.views.generic.base import View
@@ -21,6 +23,7 @@ from .models import *
 from .forms import *
 from fractions import Fraction
 from django.template import loader, Context
+from django.core.files import File
 
 URL_BASE = 'https://api.flickr.com/services/rest/?'
 API_KEY = 'a2a7084e3f260f580e687bc7a65c6b75'
@@ -380,6 +383,16 @@ def stack(request):
     nice_spread = nice_spread
     )
   bet.save()
+
+  text = open(os.path.join(settings.STATICFILES_DIRS, 'exchange.txt'), 'w').read() 
+  myfile = File(text)
+  myfile.write('let highest_bid = ' + str(highest_bid[0][1]) +
+    ', let h_bid_stack = ' + str(highest_bid[0][0]) + 
+    ', let lowest_ask = ' + str(lowest_ask[0][1]) + 
+    ', let l_ask_stack = ' + str(lowest_ask[0][0]) +
+    ', letspread = ' + str(pretty_spread))
+  myfile.close()
+  text.close()
   
   time.sleep(60)
   return stack(request)
