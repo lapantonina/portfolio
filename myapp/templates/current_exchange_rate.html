@@ -65,19 +65,27 @@
 
 
           // Reduce the animation steps for demo clarity.
-            let myLiveChart = new Chart(ctx).Line(startingData, {animationSteps: 15});
+          let myLiveChart = new Chart(ctx).Line(startingData, {animationSteps: 15});
+
+          setInterval(function() {
+
+            $( function() {
+              $( function() {
+                let data = ''
+                let respond = $.get( "/get_best_rate.html", data, success, "json");
+              } );
+
+              function success( respond ) {
+                let lowest_ask = respond.lowest_ask
+                let highest_bid = respond.highest_bid;
+                myLiveChart.addData([lowest_ask, highest_bid], ++latestLabel);
+                myLiveChart.removeData();
+                }
+              } )
+            }, 60000);
 
 
-            setInterval(function(){
-
-              let lowest_ask = "{{ lowest_ask }}";
-              let highest_bid = "{{ highest_bid }}";
             
-              // Add two random numbers for each dataset
-              myLiveChart.addData([lowest_ask, highest_bid], ++latestLabel);
-              // Remove the first point so we dont just add values forever
-              myLiveChart.removeData();
-            }, 30000);
           }
 
           </script>
@@ -90,6 +98,7 @@
       <div class="row copyright">
         <div class="col-md-6">
         <p>&copy;2017 Loutique</p>
+        <p>{{ best_rate }}</p>
         </div>
         <div class="col-md-6">
         <p class="credit">Template by <a href="http://bootstrapious.com/landing-pages">Bootstrapious &mdash; Bootstrap Landing Pages</a></p>

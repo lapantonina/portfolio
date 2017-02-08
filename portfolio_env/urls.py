@@ -2,6 +2,7 @@ from django.conf.urls import *
 from django.conf import settings
 from myapp import views
 from django.contrib import admin
+admin.autodiscover()
 
 from myapp.views import *
 
@@ -14,6 +15,7 @@ urlpatterns = [
 	url(r'^stack$', views.stack),
 	url(r'^current_exchange_rate', views.current_exchange_rate, name='current_exchange_rate'),
 	url(r'^contact', views.contact_view, name='contact'),
+	url(r'^get_best_rate', views.get_best_rate, name='get_best_rate'),
 
 
 ]

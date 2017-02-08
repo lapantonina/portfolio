@@ -144,15 +144,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATICFILES_DIRS = (
-    '/home/ubuntu/portfolio' + '/static/',
-)
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    '/var/www/static/',
+]
 
 STATIC_URL = '/static/'
 
-
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'AntoninaCurafina@gmail.com'
+EMAIL_HOST_USER = 'antoninacurafina@gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

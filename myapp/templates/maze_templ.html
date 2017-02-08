@@ -35,7 +35,7 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-12">
-          <p class="lead">Here is your maze! Size: {{ height }}x{{ width }}.
+          <p class="lead">Here is your maze! Size: {{ height }}x{{ width }}. Use arrows to move.
           <form action="/maze" method="get">{% csrf_token %}
             <b>Change size (HxW):</b>
             <input type="number" class="form-control bfh-number maze-size" name="h" min="1" max="100" required="True"> x <input type="number" class="form-control bfh-number maze-size" name="w" min="1" max="100" required="True">  <input type="submit" class="btn btn-primary" value="Change"></p>

@@ -383,16 +383,6 @@ def stack(request):
     nice_spread = nice_spread
     )
   bet.save()
-
-  text = open(os.path.join(settings.STATICFILES_DIRS, 'exchange.txt'), 'w').read() 
-  myfile = File(text)
-  myfile.write('let highest_bid = ' + str(highest_bid[0][1]) +
-    ', let h_bid_stack = ' + str(highest_bid[0][0]) + 
-    ', let lowest_ask = ' + str(lowest_ask[0][1]) + 
-    ', let l_ask_stack = ' + str(lowest_ask[0][0]) +
-    ', letspread = ' + str(pretty_spread))
-  myfile.close()
-  text.close()
   
   time.sleep(60)
   return stack(request)
@@ -410,6 +400,8 @@ def current_exchange_rate(request):
   lowest_ask = rates[0].lowest_ask
   l_ask_stack = rates[0].l_ask_stack
   spread = rates[0].spread
+
+  
 
   c.update({'highest_bid': rates[0].highest_bid, 'lowest_ask': rates[0].lowest_ask, 'rates': Bet_USD_BTC.objects.order_by('-time')})
 
@@ -438,3 +430,23 @@ def contact_view(request):
   t = get_template('contact.html')
   html = t.render(Context({'form': form}))
   return HttpResponse(html)
+
+
+def get_best_rate(request):
+
+  rates = Bet_USD_BTC.objects.order_by('-time')
+
+  best_rate = {'time': str(rates[0].time), 
+    'highest_bid': str(rates[0].highest_bid), 
+    'h_bid_stack': str(rates[0].h_bid_stack), 
+    'lowest_ask': str(rates[0].lowest_ask),
+    'l_ask_stack': str(rates[0].l_ask_stack), 
+    'spread': str(rates[0].spread)
+    }
+
+  return HttpResponse(json.dumps(best_rate))
+
+
+
+
+
