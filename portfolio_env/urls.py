@@ -6,8 +6,6 @@ admin.autodiscover()
 
 from myapp.views import *
 
-
-
 urlpatterns = [
 
 	url(r'^admin/', include(admin.site.urls)),
