@@ -63,6 +63,7 @@ footer {
 
 .username {
 	width: 32%;
+	height: 31px;
 }
 
 .theme {
@@ -113,6 +114,11 @@ footer {
 .invsbl {
 	opacity: 0;
 }
+
+.secret {
+	display: none;
+}
+
 .semi-invsbl {
 	opacity: 0.7;
 }

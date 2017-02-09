@@ -39,10 +39,10 @@ function move_down() {
     else {
       $("#" + current_cell_id).addClass("semi-invsbl");
     }
-    bootbox.confirm("Play again?", function(answer) {
-      if (answer == true) location.reload();
-      else if (answer == false) return;
-    });      
+    let maze = document.getElementById("maze")
+    let gif = document.getElementById("gif")
+    maze.classList.add("secret");
+    gif.classList.remove("secret");      
   }
 
   else if (!document.getElementById(down_ceil_id)) {

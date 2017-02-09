@@ -37,6 +37,22 @@ def user_photos(request):
   urlname = request.GET['username']
   profile_url = 'https://www.flickr.com/photos/' + urlname
 
+  upper_text = 'Impossible considered invitation him men instrument saw celebrated unpleasant. \
+  Put rest and must set kind next many near nay. He exquisite continued explained middleton am. \
+  Voice hours young woody has she think equal. Estate moment he at on wonder at season little. \
+  Six garden result summer set family esteem nay estate. End admiration mrs unreserved discovered comparison especially invitation.'
+  above_text = '<p>Able an hope of body. Any nay shyness article matters own removal nothing his forming. \
+  Gay own additions education satisfied the perpetual. If he cause manor happy. Without farther she exposed \
+  saw man led. Along on happy could cease green oh. </p><p>Betrayed cheerful declared end and. Questions we \
+  additions is extremely incommode. Next half add call them eat face. Age lived smile six defer bed their few. \
+  Had admitting concluded too behaviour him she. Of death to or to being other. </p></div><div class="col-sm-6">\
+  <p>Effects present letters inquiry no an removed or friends. Desire behind latter me though in. Supposing shameless \
+  am he engrossed up additions. My possible peculiar together to. Desire so better am cannot he up before points. \
+  Remember mistaken opinions it pleasure of debating. Court front maids forty if aware their at. Chicken use are pressed \
+  removed. </p><p>Saw yet kindness too replying whatever marianne. Old sentiments resolution admiration unaffected its \
+  mrs literature. Behaviour new set existence dashwoods. It satisfied to mr commanded consisted disposing engrossed. \
+  Tall snug do of till on easy. Form not calm new fail. </p>'
+
   if 'p' not in request.GET:
     p = 1
   elif 'p' in request.GET:
@@ -62,12 +78,13 @@ def user_photos(request):
     short_descr = 'There is no such user on Flickr'
     real_name = 'We know nothing about him'
     portfolio = ''
-    userpic = ''
+    userpic = '<img src="https://s.yimg.com/pw/images/buddyicon.jpg" alt="" class="img-responsive img-circle">'
+    upper_text = ''
   
   elif resp['stat'] == 'ok': # There is a user with such name
     user = resp['user']
     user_id = user['id']
-    username = user['username']
+    username_stat = user['username']
     short_descr = 'About ' + urlname
 
     method = 'flickr.people.getInfo'
@@ -88,7 +105,6 @@ def user_photos(request):
       real_name = urlname
     
     text = ''
-
 
     method = 'flickr.people.getPublicPhotos'
     extra_param = ('&user_id=' + user_id + 
@@ -135,9 +151,9 @@ def user_photos(request):
         
         paginator.append('      </ul>\n     </div>\n    </div>\n')                
 
-    userpic = '<img src="https://farm' + iconfarm + '.staticflickr.com/' + iconserver + '/buddyicons/' + user_id + '_r.jpg" alt="" class="img-responsive img-circle">'''
+    userpic = '<img src="https://farm' + iconfarm + '.staticflickr.com/' + iconserver + '/buddyicons/' + user_id + '.jpg" alt="" class="img-responsive img-circle">'''
   t = get_template('photos_templ_bootstrap.html')
-  html = t.render(Context({'userpic': userpic, 'short_descr': short_descr, 'about': real_name, 'username': urlname, 'photos': '\n'.join(photo_list), 'paginator': ''.join(paginator)}))
+  html = t.render(Context({'userpic': userpic, 'upper_text': upper_text, 'above_text': above_text, 'short_descr': short_descr, 'about': real_name, 'username': urlname, 'photos': '\n'.join(photo_list), 'paginator': ''.join(paginator)}))
   del photo_list[:]
   del paginator[:]
   
@@ -251,6 +267,24 @@ def maze(request):
             y = y+2
           del keychain[-1]
 
+
+      
+      get_a_surprise = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=hooray'
+      json_obj = requests.get(get_a_surprise)
+      resp = json_obj.json()
+
+      meta = resp['meta']
+      if meta['msg'] == 'OK':
+        img = resp['data']
+        surprise = img['image_original_url']
+        surprise_hight = img['image_height']
+        surprise_width = img['image_width']
+      else:
+        surprise = '/static/img/zhevuzador.jpg'
+        surprise_hight = '532px'
+        surprise_width = '300px'
+
+
       ##################### MAIN ############################
 
 
@@ -275,10 +309,10 @@ def maze(request):
       '99CC33', '669900', 'CCFF66', 'CCFF00', 'CCFF33', 'CCCC99', '666633', '333300', 'CCCC66', 'CCCC33', '999966', \
       '999933', '999900', '666600', 'FFFFFF', 'CCCCCC', '999999', '666666', '333333', '000000']
 
-      background_color = safe_web_colors[random.randint(0, len(safe_web_colors))]
+      background_color = safe_web_colors[random.randint(0, len(safe_web_colors)-1)]
 
       # эта строка не в шаблоне, т к фигурные скобки конкурируют со скобками стиля
-      o.append(str('  <div style="width:' + w_px + '; height:' + h_px + '; background:#' + background_color + '">'))
+      o.append(str('  <div id="maze" style="width:' + w_px + '; height:' + h_px + '; background:#' + background_color + '">'))
 
 
       for x in range(height):
@@ -304,13 +338,15 @@ def maze(request):
               o.append('   <div class="high_space"></div>')
             else:
               o.append('   <div id="cell_' + str(x//2+1) + '_' + str(y//2+1) + '", class="runner invsbl"></div>')
-
-
       
       o.append('  </div>')
+
+      #картинка-награда
+      gif = '<div id="gif" class="secret"><iframe src="' + surprise + '" width="' + surprise_width + '" height="' + surprise_hight + '" frameBorder="0" class="giphy-embed"></iframe></div>'
+      
       t = get_template('maze_templ.html')
 
-      html = t.render(Context({'wdth': w_px, 'hght': h_px, 'height': h, 'width': w, 'runner': '\n'.join(o)}))
+      html = t.render(Context({'wdth': w_px, 'hght': h_px, 'height': h, 'width': w, 'runner': '\n'.join(o), 'gif': gif}))
 
       del pure_path[:]
       

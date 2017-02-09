@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <head>
 
+    <link rel="shortcut icon" type="image/png" href="/static/img/favicon.ico"/>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,13 +31,11 @@
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
-            <div class="container">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="">Home</a>
-                    <ul class="nav navbar-nav">
-                    <li><a href="./contact">Contact form</a></li>
-                    </ul>
-                </div>
+            <div class="navbar-header">
+                <ul class="nav navbar-nav">
+                    <li><a href="">Home</a></li>
+                    <li><a href="../contact">Contact form</a></li>
+                </ul>
             </div>
         </div>
     </nav>
@@ -57,7 +57,9 @@
             <!-- Project One -->
             <div class="row">
                 <div class="col-md-7">
-                    <img class="img-responsive" src="/static/img/maze_cover.png" alt="maze generator">
+                    <a href="/maze?h=10&w=15" data-toggle="tooltip" data-placement="left" title="try it!">
+                        <img class="img-responsive" src="/static/img/maze_cover.png" alt="maze generator">
+                    </a>
                 </div>
                 <div class="col-md-5">
                     <h3>Maze</h3>
@@ -84,7 +86,9 @@
             <!-- Project Two -->
             <div class="row">
                 <div class="col-md-7">
-                    <img class="img-responsive" src="/static/img/f_api_cover.png" alt="">
+                    <a href="./photos_of_?username=rashellemae" data-toggle="tooltip" data-placement="left" title="look up an example">
+                        <img class="img-responsive" src="/static/img/f_api_cover.png" alt="">
+                    </a>
                 </div>
                 <div class="col-md-5">
                     <h3>Flickr API using</h3>
@@ -110,7 +114,9 @@
             <!-- Project Three -->
             <div class="row">
                 <div class="col-md-7">
-                    <img class="img-responsive" src="http://placehold.it/700x300" alt="">
+                    <a href="./current_exchange_rate">
+                        <img class="img-responsive" src="http://placehold.it/700x300" alt="">
+                    </a>
                 </div>
                 <div class="col-md-5">
                     <h3>Project Three</h3>
@@ -147,6 +153,13 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="/static/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+
+    </script>
 
 </body>
 

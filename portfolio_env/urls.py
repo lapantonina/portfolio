@@ -2,7 +2,8 @@ from django.conf.urls import *
 from django.conf import settings
 from myapp import views
 from django.contrib import admin
-admin.autodiscover()
+from django.views.generic.base import RedirectView
+
 
 from myapp.views import *
 
