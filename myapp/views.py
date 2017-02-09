@@ -448,10 +448,9 @@ def get_best_rate(request):
 
 
 def handler404(request):
-    return TemplateResponse(request, 'error404.html')
+    return TemplateResponse(request, '404.html')
     response.status_code = 404
 
 def handler500(request):
-    return TemplateResponse(request, 'error500.html')
+    return TemplateResponse(request, '50x.html')
     response.status_code = 500
-
