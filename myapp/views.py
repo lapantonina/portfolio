@@ -22,7 +22,7 @@ from django.db import connection
 from .models import *
 from .forms import *
 from fractions import Fraction
-from django.template import loader, Context
+from django.template import loader, Context, RequestContext
 from django.core.files import File
 
 URL_BASE = 'https://api.flickr.com/services/rest/?'
@@ -447,6 +447,11 @@ def get_best_rate(request):
   return HttpResponse(json.dumps(best_rate))
 
 
+def handler404(request):
+    return TemplateResponse(request, 'error404.html')
+    response.status_code = 404
 
-
+def handler500(request):
+    return TemplateResponse(request, 'error500.html')
+    response.status_code = 500
 
