@@ -28,7 +28,7 @@ with open('/etc/flickr_api_s_key.txt') as f:
     SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'pipni.ga', 'www.pipni.ga']
 
