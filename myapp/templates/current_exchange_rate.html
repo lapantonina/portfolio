@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+<!doctype html>
 <head>
 
   <link rel="shortcut icon" type="image/png" href="/static/img/favicon.ico"/>
@@ -9,16 +10,62 @@
   <meta name="description" content="maze_generator">
   <meta name="author" content="lapantonina">
   
-  <title>Maze</title>  
+  <title>Exchange</title>  
+  
+  <link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
+  <link type="text/css" rel="stylesheet" href="/static/vendor/src/css/graph.css">
+  <link type="text/css" rel="stylesheet" href="/static/vendor/src/css/detail.css">
+  <link type="text/css" rel="stylesheet" href="/static/vendor/src/css/legend.css">
+  <link type="text/css" rel="stylesheet" href="/static/vendor/extensions.css?v=2">
+
   <!-- Bootstrap Core CSS -->
   <link href="/static/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Custom CSS -->
   <link href="/static/css/custom.css" rel="stylesheet">
 
-</head>
+  <script src="/static/vendor/d3.v3.js"></script>
 
-<body data-spy="scroll" data-target="#navigation" data-offset="120">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <script>
+    jQuery.noConflict();
+  </script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js"></script>
+
+  <script src="/static/vendor/src/js/Rickshaw.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Class.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Compat.ClassList.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Graph.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Graph.Renderer.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Graph.Renderer.Area.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Graph.Renderer.Line.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Graph.Renderer.Bar.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Graph.Renderer.ScatterPlot.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Graph.Renderer.Stack.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Graph.RangeSlider.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Graph.RangeSlider.Preview.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Graph.HoverDetail.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Graph.Annotate.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Graph.Legend.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Graph.Axis.Time.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Graph.Behavior.Series.Toggle.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Graph.Behavior.Series.Order.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Graph.Behavior.Series.Highlight.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Graph.Smoother.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Fixtures.Time.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Fixtures.Time.Local.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Fixtures.Number.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Fixtures.RandomData.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Fixtures.Color.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Color.Palette.js"></script>
+  <script src="/static/vendor/src/js/Rickshaw.Graph.Axis.Y.js"></script>
+
+  <script src="/static/vendor/extensions.js"></script>
+
+
+</head>
+<body>
 
   <!-- Navigation -->
   <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -37,92 +84,176 @@
     <div class="container">
       <div id="chartContainer" class="row" style="height: 300px; width: 100%; margin: 50px 5px auto">
         <div class="row">
-          <div class="col-lg-12">
-          <p class="lead">Here is some exchange statistics</p>
+
+          <form id="side_panel">
+            <h2>Mind The Gap</h2>
+            <section><div id="legend"></div></section>
+            <section></section>
+            <div>random text</div>
+          </form>
+
+
+          <div id="chart_container">
+            <div id="chart"></div>
+            <div id="timeline"></div>
+            <div id="preview"></div>
           </div>
-        </div><script src="//www.chartjs.org/assets/Chart.min.js"></script>
-        <canvas id="updating-chart" width="500" height="300"></canvas>
-        <script type="text/javascript">
 
-          window.onload = function () {
-            let canvas = document.getElementById('updating-chart'),
-              ctx = canvas.getContext('2d'),
-              startingData = {
-                labels: [1, 2, 3, 4, 5, 6, 7],
-                datasets: [
-                    {
-                        fillColor: "rgba(220,220,220,0.2)",
-                        strokeColor: "rgba(220,220,220,1)",
-                        pointColor: "rgba(220,220,220,1)",
-                        pointStrokeColor: "#fff",
-                        data: [0, 0, 0, 0, 0, 0, 0]
-                    },
-                    {
-                        fillColor: "rgba(151,187,205,0.2)",
-                        strokeColor: "rgba(151,187,205,1)",
-                        pointColor: "rgba(151,187,205,1)",
-                        pointStrokeColor: "#fff",
-                        data: [0, 0, 0, 0, 0, 0, 0]
-                    }
-                ]
-              },
-              latestLabel = startingData.labels[6];
+        </div>
 
+        <script>
 
+        // set up our data series with last data points
 
+        var seriesData = {% autoescape off %}{{ previous_data }}{% endautoescape %};  
 
-          // Reduce the animation steps for demo clarity.
-          let myLiveChart = new Chart(ctx).Line(startingData, {animationSteps: 15});
+        var palette = new Rickshaw.Color.Palette( { scheme: 'colorwheel' } );
 
-          setInterval(function() {
+        // instantiate our graph!
 
-            $( function() {
-              $( function() {
-                let data = ''
-                let respond = $.get( "/get_best_rate.html", data, success, "json");
-              } );
+        var graph = new Rickshaw.Graph( {
+          element: document.getElementById("chart"),
+          width: 900,
+          height: 300,
+          renderer: 'area',
+          stroke: true,
+          preserve: true,
+          series: [
+            {
+              color: palette.color(),
+              data: seriesData[0],
+              name: 'Highest Bid'
+            }, {
+              color: palette.color(),
+              data: seriesData[1],
+              name: 'Lowest Ask'
+            }
+          ]
+        } );
 
-              function success( respond ) {
-                let lowest_ask = respond.lowest_ask
-                let highest_bid = respond.highest_bid;
-                myLiveChart.addData([lowest_ask, highest_bid], ++latestLabel);
-                myLiveChart.removeData();
-                }
-              } )
-            }, 60000);
+        graph.render();
 
+        var preview = new Rickshaw.Graph.RangeSlider( {
+          graph: graph,
+          element: document.getElementById('preview'),
+        } );
 
-            
+        var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+          graph: graph,
+          xFormatter: function(x) {
+            return new Date(x * 1000).toString();
           }
+        } );
 
-          </script>
-        
+        var annotator = new Rickshaw.Graph.Annotate( {
+          graph: graph,
+          element: document.getElementById('timeline')
+        } );
+
+        var legend = new Rickshaw.Graph.Legend( {
+          graph: graph,
+          element: document.getElementById('legend')
+
+        } );
+
+        var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
+          graph: graph,
+          legend: legend
+        } );
+
+        var order = new Rickshaw.Graph.Behavior.Series.Order( {
+          graph: graph,
+          legend: legend
+        } );
+
+        var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
+          graph: graph,
+          legend: legend
+        } );
+
+        var ticksTreatment = 'glow';
+
+        var xAxis = new Rickshaw.Graph.Axis.Time( {
+          graph: graph,
+          ticksTreatment: ticksTreatment,
+          timeFixture: new Rickshaw.Fixtures.Time.Local()
+        } );
+
+        xAxis.render();
+
+        var yAxis = new Rickshaw.Graph.Axis.Y( {
+          graph: graph,
+          tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+          ticksTreatment: ticksTreatment
+        } );
+
+        yAxis.render();
+
+
+        var controls = new RenderControls( {
+          element: document.querySelector('form'),
+          graph: graph
+        } );
+
+        // add some data every so often
+
+        var messages = [
+          "Changed home page welcome message",
+          "Minified JS and CSS",
+          "Changed button color from blue to green",
+          "Refactored SQL query to use indexed columns",
+          "Added additional logging for debugging",
+          "Fixed typo",
+          "Rewrite conditional logic for clarity",
+          "Added documentation for new methods"
+        ];
+
+       
+        var getLatestData = function(){
+          jQuery.ajax({
+            url: "/get_best_rate.html",
+            type: "GET",
+            dataType: "json",
+            success: function(newData){
+              var num = seriesData[0].length;
+              seriesData[0].push( { x: num, y: newData[0]['y'] } );
+              seriesData[1].push( { x: num, y: newData[1]['y'] } );
+              graph.update();
+            }
+          });
+        };
+
+
+        setInterval( function() {
+          getLatestData();
+
+        }, 60000 );
+
+
+        function addAnnotation(force) {
+          if (messages.length > 0 && (force || Math.random() >= 0.95)) {
+            annotator.add(seriesData[2][seriesData[2].length-1].x, messages.shift());
+            annotator.update();
+          }
+        }
+
+        addAnnotation(true);
+        setTimeout( function() { setInterval( addAnnotation, 3000 ) }, 3000 );
+
+        var previewXAxis = new Rickshaw.Graph.Axis.Time({
+          graph: preview.previews[0],
+          timeFixture: new Rickshaw.Fixtures.Time.Local(),
+          ticksTreatment: ticksTreatment
+        });
+
+        previewXAxis.render();
+
+        </script>
+        </div>
       </div>
-    </div>
+    </div>    
   </div>
-
-  <footer style="background-color: #333333;" class="section-inverse">
-    <div class="container"> 
-      <div class="row copyright">
-        <div class="col-md-6">
-        <p>&copy;2017 Loutique</p>
-        </div>
-        <div class="col-md-6">
-        <p class="credit">Template by <a href="http://bootstrapious.com/landing-pages">Bootstrapious &mdash; Bootstrap Landing Pages</a></p>
-        <!-- Please do not remove the backlink to us. It is part of the licence conditions. Thanks for understanding :)-->
-        </div>
-      </div>
-    </div>
-  </footer>
-  
-
-
-<!-- jQuery -->
-<script src="/static/js/jquery-1.11.0.min.js"></script>
-<script src="/static/js/exchange.js"></script>
-
-<!-- Bootstrap Core JavaScript -->
-<script src="/static/js/bootstrap.min.js"></script>
-
 </body>
+
+
 </html>

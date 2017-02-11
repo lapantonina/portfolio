@@ -28,13 +28,13 @@ with open('/etc/flickr_api_s_key.txt') as f:
     SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'pipni.ga', 'www.pipni.ga']
 
 CSRF_COOKIE_SECURE = True
 
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
 
 CACHES = {
     'default': {

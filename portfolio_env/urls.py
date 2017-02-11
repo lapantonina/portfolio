@@ -18,5 +18,4 @@ urlpatterns = [
 	url(r'^contact', views.contact_view, name='contact'),
 	url(r'^get_best_rate', views.get_best_rate, name='get_best_rate'),
 
-
 ]

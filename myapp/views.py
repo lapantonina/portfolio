@@ -32,6 +32,14 @@ NOJSONCALLBACK = '1'
 BASIC_REQUEST = (URL_BASE + 'api_key=' + API_KEY + '&format=' + FORMAT + '&nojsoncallback=' + NOJSONCALLBACK + '&method=')
 
 
+def handler404(request):
+    return TemplateResponse(request, '404.html')
+    response.status_code = 404
+
+def handler500(request):
+    return TemplateResponse(request, '50x.html')
+    response.status_code = 500
+
 def user_photos(request):
 
   urlname = request.GET['username']
@@ -164,6 +172,30 @@ def home_page(request):
   t = get_template('home_templ.html')
   html = t.render(Context())
   return HttpResponse(html)
+
+@csrf_exempt
+def contact_view(request):
+  if request.method == 'POST':
+    form = ContactForm(request.POST)
+    #Если форма заполнена корректно, сохраняем все введённые пользователем значения
+    if form.is_valid():
+      subject = form.cleaned_data['subject']
+      sender = form.cleaned_data['sender']
+      message = form.cleaned_data['message']
+      recipients = ['AntoninaCurafina@gmail.com']
+      #Переходим на другую страницу, если сообщение отправлено
+      t = get_template('home_templ.html')
+      html = t.render()
+      return HttpResponse(html)
+  else:
+    #Заполняем форму
+    form = ContactForm()
+  #Отправляем форму на страницу
+  t = get_template('contact.html')
+  html = t.render(Context({'form': form}))
+  return HttpResponse(html)
+
+
 
 def maze(request):
 
@@ -404,17 +436,19 @@ def stack(request):
   lowest_ask = sorted(ask_chain.items(), key=lambda q: q[1])
   highest_bid = sorted(bid_chain.items(), key=lambda q: q[1], reverse=True)
   
-  spread = highest_bid[0][1] - lowest_ask[0][1] 
+  spread = highest_bid[0][1] - lowest_ask[0][1]
   pretty_spread = "%0.6f" % spread
   if spread > 0.0:
     nice_spread = True
+
+
 
   bet = Bet_USD_BTC(
     highest_bid = highest_bid[0][1],
     h_bid_stack = highest_bid[0][0],
     lowest_ask = lowest_ask[0][1],
     l_ask_stack = lowest_ask[0][0],
-    spread = pretty_spread,
+    spread = spread,
     time = datetime.now(),
     nice_spread = nice_spread
     )
@@ -426,67 +460,52 @@ def stack(request):
 
 def current_exchange_rate(request):
 
-  c = Context()
-
   rates = Bet_USD_BTC.objects.order_by('-time')
+  previous_data = []
+  bid_data = []
+  ask_data = []
 
-  time = rates[0].time
-  highest_bid = rates[0].highest_bid
-  h_bid_stack = rates[0].h_bid_stack
-  lowest_ask = rates[0].lowest_ask
-  l_ask_stack = rates[0].l_ask_stack
-  spread = rates[0].spread
+  for z in range(6):
+    highest_bid = 1 / float(rates[z].highest_bid)
+    lowest_ask = 1 / float(rates[z].lowest_ask)
+    b_d = dict([('x', abs(z-5)), ('y', highest_bid)])
+    a_d = dict([('x', abs(z-5)), ('y', lowest_ask)])
+    bid_data.insert(0, b_d)
+    ask_data.insert(0, a_d)
 
+  previous_data.append(bid_data)
+  previous_data.append(ask_data)
+  print(previous_data)
   
-
-  c.update({'highest_bid': rates[0].highest_bid, 'lowest_ask': rates[0].lowest_ask, 'rates': Bet_USD_BTC.objects.order_by('-time')})
-
-  response = TemplateResponse(request, 'current_exchange_rate.html', c.update({'highest_bid': rates[0].highest_bid, 'lowest_ask': rates[0].lowest_ask, 'rates': Bet_USD_BTC.objects.order_by('-time')}))
+  response = TemplateResponse(request, 'current_exchange_rate.html', ({'previous_data': previous_data}))
   return response
-
-
-@csrf_exempt
-def contact_view(request):
-  if request.method == 'POST':
-    form = ContactForm(request.POST)
-    #Если форма заполнена корректно, сохраняем все введённые пользователем значения
-    if form.is_valid():
-      subject = form.cleaned_data['subject']
-      sender = form.cleaned_data['sender']
-      message = form.cleaned_data['message']
-      recipients = ['AntoninaCurafina@gmail.com']
-      #Переходим на другую страницу, если сообщение отправлено
-      t = get_template('home_templ.html')
-      html = t.render()
-      return HttpResponse(html)
-  else:
-    #Заполняем форму
-    form = ContactForm()
-  #Отправляем форму на страницу
-  t = get_template('contact.html')
-  html = t.render(Context({'form': form}))
-  return HttpResponse(html)
 
 
 def get_best_rate(request):
 
   rates = Bet_USD_BTC.objects.order_by('-time')
+  latest_data = []
+  latest_bid_data = {}
+  latest_ask_data = {}
 
-  best_rate = {'time': str(rates[0].time), 
-    'highest_bid': str(rates[0].highest_bid), 
-    'h_bid_stack': str(rates[0].h_bid_stack), 
-    'lowest_ask': str(rates[0].lowest_ask),
-    'l_ask_stack': str(rates[0].l_ask_stack), 
-    'spread': str(rates[0].spread)
-    }
+  highest_bid = 1 / float(rates[0].highest_bid)
+  lowest_ask = 1 / float(rates[0].lowest_ask)
+  latest_bid_data = {'y': highest_bid}
+  latest_ask_data = {'y': lowest_ask}
 
-  return HttpResponse(json.dumps(best_rate))
+  latest_data.append(latest_bid_data)
+  latest_data.append(latest_ask_data)
+
+  return HttpResponse(json.dumps(latest_data))
 
 
-def handler404(request):
-    return TemplateResponse(request, '404.html')
-    response.status_code = 404
+'''def get_best_rate(request):
 
-def handler500(request):
-    return TemplateResponse(request, '50x.html')
-    response.status_code = 500
+  rates = Bet_USD_BTC.objects.order_by('-time')
+  latest_data = []
+  highest_bid = float(rates[0].highest_bid)
+
+  latest_data = {'x': 7, 'y': highest_bid+3}
+  
+  return HttpResponse(json.dumps(latest_data))
+'''
