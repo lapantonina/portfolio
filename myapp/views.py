@@ -159,7 +159,7 @@ def user_photos(request):
         
         paginator.append('      </ul>\n     </div>\n    </div>\n')                
 
-    userpic = '<img src="https://farm' + iconfarm + '.staticflickr.com/' + iconserver + '/buddyicons/' + user_id + '.jpg" alt="" class="img-responsive img-circle">'''
+    userpic = '<img src="https://farm' + iconfarm + '.staticflickr.com/' + iconserver + '/buddyicons/' + user_id + '_r.jpg" alt="" class="img-responsive img-circle">'''
   t = get_template('photos_templ_bootstrap.html')
   html = t.render(Context({'userpic': userpic, 'upper_text': upper_text, 'above_text': above_text, 'short_descr': short_descr, 'about': real_name, 'username': urlname, 'photos': '\n'.join(photo_list), 'paginator': ''.join(paginator)}))
   del photo_list[:]
@@ -464,6 +464,51 @@ def current_exchange_rate(request):
   previous_data = []
   bid_data = []
   ask_data = []
+  time_data = []
+
+  for z in range(15):
+    highest_bid = "%0.6f" %float(rates[z].highest_bid)
+    lowest_ask = "%0.6f" %float(rates[z].lowest_ask)
+    date = str(rates[z].time.strftime("%d.%m.%Y"))
+    time = str(rates[z].time.strftime("%I:%M %p"))
+    bid_data.insert(0, highest_bid)
+    ask_data.insert(0, lowest_ask)
+    time_data.insert(0, time)
+
+  previous_data.append(bid_data)
+  previous_data.append(ask_data)
+  previous_data.append(time_data)
+  
+  response = TemplateResponse(request, 'USD-BTC_exchange_rate.html', ({'previous_data': previous_data}))
+  return response
+
+
+def get_best_rate(request):
+
+  rates = Bet_USD_BTC.objects.order_by('-time')
+
+  best_rate = {'date': str(rates[0].time.strftime("%d.%m.%Y")),
+    'time': str(rates[0].time.strftime("%I:%M %p")), 
+    'highest_bid': "%0.6f" %float(rates[0].highest_bid), 
+    'h_bid_stack': str(rates[0].h_bid_stack), 
+    'lowest_ask': "%0.6f" %float(rates[0].lowest_ask),
+    'l_ask_stack': str(rates[0].l_ask_stack), 
+    'spread': float(rates[0].spread)
+    }
+
+  return HttpResponse(json.dumps(best_rate))
+
+
+'''
+FOR RICKSHAW
+
+
+def current_exchange_rate(request):
+
+  rates = Bet_USD_BTC.objects.order_by('-time')
+  previous_data = []
+  bid_data = []
+  ask_data = []
 
   for z in range(6):
     highest_bid = 1 / float(rates[z].highest_bid)
@@ -475,13 +520,12 @@ def current_exchange_rate(request):
 
   previous_data.append(bid_data)
   previous_data.append(ask_data)
-  print(previous_data)
   
   response = TemplateResponse(request, 'test.html', ({'previous_data': previous_data}))
   return response
 
 
-'''def get_best_rate(request):
+def get_best_rate(request):
 
   rates = Bet_USD_BTC.objects.order_by('-time')
   latest_data = []
@@ -497,18 +541,3 @@ def current_exchange_rate(request):
   latest_data.append(latest_ask_data)
 
   return HttpResponse(json.dumps(latest_data))'''
-
-
-def get_best_rate(request):
-
-  rates = Bet_USD_BTC.objects.order_by('-time')
-
-  best_rate = {'time': str(rates[0].time), 
-    'highest_bid': str(rates[0].highest_bid), 
-    'h_bid_stack': str(rates[0].h_bid_stack), 
-    'lowest_ask': str(rates[0].lowest_ask),
-    'l_ask_stack': str(rates[0].l_ask_stack), 
-    'spread': str(rates[0].spread)
-    }
-
-  return HttpResponse(json.dumps(best_rate))

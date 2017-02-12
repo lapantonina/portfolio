@@ -32,53 +32,50 @@
 <!-- Content -->
   <div class="container wrapper">
     <div class="container">
-      <div id="chartContainer" class="row" style="height: 300px; width: 100%; margin: 50px 5px auto">
-        <script src="//www.chartjs.org/assets/Chart.min.js"></script>
-        <canvas id="updating-chart" width="500" height="300"></canvas>
-        <script type="text/javascript">
-          window.onload = function () {
-            let canvas = document.getElementById('updating-chart'),
-              ctx = canvas.getContext('2d'),
-              startingData = {
-                labels: [1, 2, 3, 4, 5, 6, 7],
-                datasets: [
-                    {
-                        fillColor: "rgba(220,220,220,0.2)",
-                        strokeColor: "rgba(220,220,220,1)",
-                        pointColor: "rgba(220,220,220,1)",
-                        pointStrokeColor: "#fff",
-                        data: [0, 0, 0, 0, 0, 0, 0]
-                    },
-                    {
-                        fillColor: "rgba(151,187,205,0.2)",
-                        strokeColor: "rgba(151,187,205,1)",
-                        pointColor: "rgba(151,187,205,1)",
-                        pointStrokeColor: "#fff",
-                        data: [0, 0, 0, 0, 0, 0, 0]
-                    }
-                ]
-              },
-              latestLabel = startingData.labels[6];
-          // Reduce the animation steps for demo clarity.
-          let myLiveChart = new Chart(ctx).Line(startingData, {animationSteps: 15});
-          setInterval(function() {
-            $( function() {
-              $( function() {
-                let data = ''
-                let respond = $.get( "/get_best_rate.html", data, success, "json");
-              } );
-              function success( respond ) {
-                let lowest_ask = respond.lowest_ask
-                let highest_bid = respond.highest_bid;
-                myLiveChart.addData([lowest_ask, highest_bid], ++latestLabel);
-                myLiveChart.removeData();
+      <div id="chartContainer" class="row" style="height: 500px; width: 100%; margin: 50px 0 auto">
+        <script src="/static/js/charts.min.js"></script>
+        <canvas id="myChart" width="400" height="400"></canvas>
+        <script>
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+            datasets: [{
+              label: '# of Votes',
+              data: [12, 19, 3, 5, 2, 3],
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero:true
                 }
-              } )
-            }, 60000);
-            
+              }]
+            }
           }
-          </script>
+        });
+        </script>
       </div>
+      <div id="legend" class="row" style="height: 50px; width: 100%; margin: 30px 0 auto">Blue line = hightest bid, gray = lowest ask</div>
     </div>
   </div>
 
@@ -109,5 +106,3 @@
 
 </body>
 </html>
-Contact GitHub API Training Shop Blog About
-© 2017 GitHub, Inc. Terms Privacy Security Status Help

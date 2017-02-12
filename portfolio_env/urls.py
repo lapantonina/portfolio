@@ -14,7 +14,7 @@ urlpatterns = [
 	url(r'^photos_of_$', views.user_photos, name='flickr_api'),
 	url(r'^maze$', views.maze, name='maze'),
 	url(r'^stack$', views.stack),
-	url(r'^current_exchange_rate', views.current_exchange_rate, name='current_exchange_rate'),
+	url(r'^USD-BTC_exchange_rate', views.current_exchange_rate, name='current_exchange_rate'),
 	url(r'^contact', views.contact_view, name='contact'),
 	url(r'^get_best_rate', views.get_best_rate, name='get_best_rate'),
 
