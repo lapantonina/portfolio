@@ -465,12 +465,18 @@ def current_exchange_rate(request):
   bid_data = []
   ask_data = []
   time_data = []
+  h_bid_stack = []
+  l_ask_stack = []
+  spread = []
 
   for z in range(15):
     highest_bid = "%0.6f" %float(rates[z].highest_bid)
     lowest_ask = "%0.6f" %float(rates[z].lowest_ask)
     date = str(rates[z].time.strftime("%d.%m.%Y"))
     time = str(rates[z].time.strftime("%I:%M %p"))
+    h_bid_stack = str(rates[z].h_bid_stack)
+    l_ask_stack = str(rates[z].l_ask_stack)
+    spread = "%0.6f" %float(rates[z].spread)
     bid_data.insert(0, highest_bid)
     ask_data.insert(0, lowest_ask)
     time_data.insert(0, time)
@@ -478,6 +484,9 @@ def current_exchange_rate(request):
   previous_data.append(bid_data)
   previous_data.append(ask_data)
   previous_data.append(time_data)
+  previous_data.append(h_bid_stack)
+  previous_data.append(l_ask_stack)
+  previous_data.append(spread)
   
   response = TemplateResponse(request, 'USD-BTC_exchange_rate.html', ({'previous_data': previous_data}))
   return response

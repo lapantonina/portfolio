@@ -124,13 +124,13 @@
 			tooltipEvents: ["mousemove", "touchstart", "touchmove", "mouseout"],
 
 			// String - Tooltip background colour
-			tooltipFillColor: "rgba(0,0,0,0.8)",
+			tooltipFillColor: "rgba(0,0,0,0.7)",
 
 			// String - Tooltip label font declaration for the scale label
 			tooltipFontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
 
 			// Number - Tooltip label font size in pixels
-			tooltipFontSize: 14,
+			tooltipFontSize: 13,
 
 			// String - Tooltip font weight style
 			tooltipFontStyle: "normal",
@@ -145,7 +145,7 @@
 			tooltipTitleFontSize: 14,
 
 			// String - Tooltip title font weight style
-			tooltipTitleFontStyle: "bold",
+			tooltipTitleFontStyle: "normal",
 
 			// String - Tooltip title font colour
 			tooltipTitleFontColor: "#fff",
