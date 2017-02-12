@@ -88,8 +88,9 @@
           <form id="side_panel">
             <h2>Mind The Gap</h2>
             <section><div id="legend"></div></section>
-            <section></section>
-            <div>random text</div>
+            <section>
+              <div>random text</div>
+            </section>
           </form>
 
 
@@ -105,13 +106,15 @@
 
         // set up our data series with last data points
 
-        var seriesData = {% autoescape off %}{{ previous_data }}{% endautoescape %};  
+        var seriesData = {% autoescape off %}{{ previous_data }}{% endautoescape %};
+
 
         var palette = new Rickshaw.Color.Palette( { scheme: 'colorwheel' } );
 
         // instantiate our graph!
 
         var graph = new Rickshaw.Graph( {
+          unstack: false,
           element: document.getElementById("chart"),
           width: 900,
           height: 300,
@@ -232,7 +235,7 @@
 
         function addAnnotation(force) {
           if (messages.length > 0 && (force || Math.random() >= 0.95)) {
-            annotator.add(seriesData[2][seriesData[2].length-1].x, messages.shift());
+            annotator.add(seriesData[2][seriesData[1].length-1].x, messages.shift());
             annotator.update();
           }
         }

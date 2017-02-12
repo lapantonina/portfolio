@@ -301,7 +301,7 @@ def maze(request):
 
 
       
-      get_a_surprise = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=hooray'
+      get_a_surprise = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=cat'
       json_obj = requests.get(get_a_surprise)
       resp = json_obj.json()
 
@@ -477,11 +477,11 @@ def current_exchange_rate(request):
   previous_data.append(ask_data)
   print(previous_data)
   
-  response = TemplateResponse(request, 'current_exchange_rate.html', ({'previous_data': previous_data}))
+  response = TemplateResponse(request, 'test.html', ({'previous_data': previous_data}))
   return response
 
 
-def get_best_rate(request):
+'''def get_best_rate(request):
 
   rates = Bet_USD_BTC.objects.order_by('-time')
   latest_data = []
@@ -496,16 +496,19 @@ def get_best_rate(request):
   latest_data.append(latest_bid_data)
   latest_data.append(latest_ask_data)
 
-  return HttpResponse(json.dumps(latest_data))
+  return HttpResponse(json.dumps(latest_data))'''
 
 
-'''def get_best_rate(request):
+def get_best_rate(request):
 
   rates = Bet_USD_BTC.objects.order_by('-time')
-  latest_data = []
-  highest_bid = float(rates[0].highest_bid)
 
-  latest_data = {'x': 7, 'y': highest_bid+3}
-  
-  return HttpResponse(json.dumps(latest_data))
-'''
+  best_rate = {'time': str(rates[0].time), 
+    'highest_bid': str(rates[0].highest_bid), 
+    'h_bid_stack': str(rates[0].h_bid_stack), 
+    'lowest_ask': str(rates[0].lowest_ask),
+    'l_ask_stack': str(rates[0].l_ask_stack), 
+    'spread': str(rates[0].spread)
+    }
+
+  return HttpResponse(json.dumps(best_rate))
