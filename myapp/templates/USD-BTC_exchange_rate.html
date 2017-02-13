@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <head>
+  <link rel="shortcut icon" type="image/png" href="/static/img/favicon.ico"/>
+
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,6 +14,27 @@
   <link type="text/css" rel="stylesheet" href="/static/vendor/src/css/legend.css">
   <!-- Custom CSS -->
   <link href="/static/css/custom.css" rel="stylesheet">
+
+
+<style>
+
+.label-box ul li {
+  display: inline;
+  position: relative;
+  padding: 2px 50px 2px 25px;
+  margin-left: -40px;
+  
+}
+.label-box li span {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 100%;
+  border-radius: 5px;
+}
+</style>
 
 </head>
 
@@ -29,96 +52,93 @@
     </div>
   </nav>
 
-<style>
-.label-box ul {
-  list-style: none;
-}
-.label-box ul li {
-  display: inline;
-  position: relative;
-  padding: 2px 8px 2px 28px;
-  
-}
-.label-box li span {
-  display: block;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 20px;
-  height: 100%;
-  border-radius: 5px;
-}
-#chart-area > *{
-  float:left
-    }
-</style>
-
-<!-- Content -->
+  <!-- Content -->
   <div class="container wrapper">
     <div class="container">
-      <div id="chartContainer" class="row" style="height: 500px; width: 100%; margin: 50px auto">
-        <script src="/static/js/charts.js"></script>
-        <canvas id="updating-chart" width="1000" height="500"></canvas>
-        <div id="legend" class="label-box" style="margin: 15px 20px auto"></div>
-        <script type="text/javascript">
+      
+      <div class="row">
+        <div class="col-lg-12">
+          <h1 class="page-header">USD to BTC exchange rate graph
+            <small>(updated once a minute)</small>
+          </h1>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div id="legend" class="container col-md-3 label-box">
+        </div>
+        <div class="container col-md-9">
+          <p>The graph shows the highest bid and lowest ask (excluding fee) among the following exchanges: CEX.io, LiveCoin, HitBTC, BitFinex.</p>
+          <p>
+        </div>
 
-          let previous_data = {% autoescape off %}{{ previous_data }}{% endautoescape %};
-          window.onload = function () {
-            let canvas = document.getElementById('updating-chart'),
-              ctx = canvas.getContext('2d'),
-              startingData = {
-                labels: previous_data[2],
-                datasets: [
-                    {
-                        label: 'highest_bid',
-                        fillColor: "rgba(133,187,0,0.2)",
-                        strokeColor: "rgba(133,187,0,1)",
-                        pointColor: "rgba(133,187,0,1)",
-                        pointStrokeColor: "#fff",
-                        data: previous_data[0],
-                        spread: previous_data[5]
+      </div> 
+      <div class="row">
+        <div class="container">
+          <div id="chartContainer" class="row" style="height: 500px; width: 100%; margin: 20px 0 auto ">
+            <script src="/static/js/charts.js"></script>
+            <canvas id="updating-chart" width="1140" height="500"></canvas>
+
+              <script type="text/javascript">
+
+                let previous_data = {% autoescape off %}{{ previous_data }}{% endautoescape %};
+                window.onload = function () {
+                  let canvas = document.getElementById('updating-chart'),
+                    ctx = canvas.getContext('2d'),
+                    startingData = {
+                      labels: previous_data[2],
+                      datasets: [
+                          {
+                              label: 'highest_bid',
+                              fillColor: "rgba(133,187,0,0.2)",
+                              strokeColor: "rgba(133,187,0,1)",
+                              pointColor: "rgba(133,187,0,1)",
+                              pointStrokeColor: "#fff",
+                              data: previous_data[0],
+                              spread: previous_data[5]
+                          },
+                          {
+                              label: 'lowest_ask',
+                              fillColor: "rgba(199,87,37,0.1)",
+                              strokeColor: "rgba(199,87,37,1)",
+                              pointColor: "rgba(199,87,37,1)",
+                              pointStrokeColor: "#fff",
+                              data: previous_data[1],
+                              spread: previous_data[5]
+                          }
+                      ],
+                      
                     },
-                    {
-                        label: 'lowest_ask',
-                        fillColor: "rgba(199,87,37,0.1)",
-                        strokeColor: "rgba(199,87,37,1)",
-                        pointColor: "rgba(199,87,37,1)",
-                        pointStrokeColor: "#fff",
-                        data: previous_data[1],
-                        spread: previous_data[5]
-                    }
-                ],
-                
-              },
-              latestLabel = startingData.labels[6];
-          // Reduce the animation steps for demo clarity.
-          let myLiveChart = new Chart(ctx).Line(startingData, {animationSteps: 15});
-          document.getElementById("legend").innerHTML = myLiveChart.generateLegend();
-          setInterval(function() {
-            $( function() {
-              $( function() {
-                let data = ''
-                let respond = $.get( "/get_best_rate.html", data, success, "json");
-              } );
-              function success( respond ) {
-                let lowest_ask = respond.lowest_ask
-                let highest_bid = respond.highest_bid;
-                let latestLabel = respond.time;
-                myLiveChart.addData([lowest_ask, highest_bid], latestLabel);
-                myLiveChart.removeData();
+                    latestLabel = startingData.labels[6];
+                // Reduce the animation steps for demo clarity.
+                let myLiveChart = new Chart(ctx).Line(startingData, {animationSteps: 15});
+                document.getElementById("legend").innerHTML = myLiveChart.generateLegend();
+                setInterval(function() {
+                  $( function() {
+                    $( function() {
+                      let data = ''
+                      let respond = $.get( "/get_best_rate.html", data, success, "json");
+                    } );
+                    function success( respond ) {
+                      let lowest_ask = respond.lowest_ask
+                      let highest_bid = respond.highest_bid;
+                      let latestLabel = respond.time;
+                      myLiveChart.addData([highest_bid,lowest_ask], latestLabel);
+                      myLiveChart.removeData();
+                      }
+                    } )
+                  }, 60000);
+                  
                 }
-              } )
-            }, 60000);
-            
-          }
 
-
-
-          
-          </script>
+              </script>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
 
   <footer style="background-color: #333333;" class="section-inverse">
     <div class="container"> 

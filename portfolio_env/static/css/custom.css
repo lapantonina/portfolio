@@ -154,11 +154,3 @@ footer {
 .btn {
     margin-bottom: 2px;
 }
-
-
-#y_axis {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 40px;
-}

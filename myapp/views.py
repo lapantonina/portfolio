@@ -419,6 +419,7 @@ def stack(request):
   for exchange in exchanges:
 
     json_obj = requests.get(exchanges[exchange]['url'])
+
     parsed_json = json_obj.json()
     ask_path = exchanges[exchange]['ask']
     bid_path = exchanges[exchange]['bid']
@@ -469,7 +470,7 @@ def current_exchange_rate(request):
   l_ask_stack = []
   spread = []
 
-  for z in range(15):
+  for z in range(40):
     highest_bid = "%0.6f" %float(rates[z].highest_bid)
     lowest_ask = "%0.6f" %float(rates[z].lowest_ask)
     date = str(rates[z].time.strftime("%d.%m.%Y"))
