@@ -57,7 +57,7 @@
             <!-- Project One -->
             <div class="row">
                 <div class="col-md-7">
-                    <a href="/maze?h=10&w=15" data-toggle="tooltip" data-placement="left" title="try it!">
+                    <a href="/maze?h=10&w=15">
                         <img class="img-responsive" src="/static/img/maze_cover.png" alt="maze generator">
                     </a>
                 </div>
@@ -86,7 +86,7 @@
             <!-- Project Two -->
             <div class="row">
                 <div class="col-md-7">
-                    <a href="./photos_of_?username=rashellemae" data-toggle="tooltip" data-placement="left" title="look up an example">
+                    <a href="./photos_of_?username=rashellemae"">
                         <img class="img-responsive" src="/static/img/f_api_cover.png" alt="">
                     </a>
                 </div>
@@ -120,8 +120,8 @@
                 </div>
                 <div class="col-md-5">
                     <h3>USD/BTC exchange rate graph</h3>
-                    <h4>Subheading</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis, temporibus, dolores, at, praesentium ut unde repudiandae voluptatum sit ab debitis suscipit fugiat natus velit excepturi amet commodi deleniti alias possimus!</p>
+                    <h4>Dynamic graph</h4>
+                    <p>Simple graph made with chart.js. Shows US dollad to Bitcoin exchange rate on several popular exchanges.</p>
                     <form action="/USD-BTC_exchange_rate" method="get">{% csrf_token %}
                         <input type="submit" class="btn btn-primary" value="SHOW"></p>
                     </form>

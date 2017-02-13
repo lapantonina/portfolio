@@ -2,28 +2,25 @@
 # -*- coding: utf-8 -*-
 
 # Create your views here.
-import os
+import os, sys
 import requests, json
-import sys
-import django.shortcuts
 import textwrap
 import math, time, datetime, random
+import django.shortcuts
+from django.shortcuts import render_to_response, redirect
 from django.conf import settings
-from django.core.mail import send_mail, BadHeaderError
+from django.core.mail import send_mail, BadHeaderError, EmailMessage
 from django.http import HttpResponse, Http404
 from django.views.generic.base import View
-from django.template import Template, Context
+from django.template import Template, Context, loader, RequestContext
 from django.template.loader import get_template
 from django.template.response import TemplateResponse
-from django.shortcuts import render_to_response
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.template.defaulttags import register
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.db import connection
 from .models import *
 from .forms import *
 from fractions import Fraction
-from django.template import loader, Context, RequestContext
-from django.core.files import File
 
 URL_BASE = 'https://api.flickr.com/services/rest/?'
 API_KEY = 'a2a7084e3f260f580e687bc7a65c6b75'
@@ -173,28 +170,44 @@ def home_page(request):
   html = t.render(Context())
   return HttpResponse(html)
 
+
+
+
 @csrf_exempt
 def contact_view(request):
-  if request.method == 'POST':
-    form = ContactForm(request.POST)
-    #Если форма заполнена корректно, сохраняем все введённые пользователем значения
-    if form.is_valid():
-      subject = form.cleaned_data['subject']
-      sender = form.cleaned_data['sender']
-      message = form.cleaned_data['message']
-      recipients = ['AntoninaCurafina@gmail.com']
-      #Переходим на другую страницу, если сообщение отправлено
-      t = get_template('home_templ.html')
-      html = t.render()
-      return HttpResponse(html)
-  else:
-    #Заполняем форму
-    form = ContactForm()
-  #Отправляем форму на страницу
-  t = get_template('contact.html')
-  html = t.render(Context({'form': form}))
-  return HttpResponse(html)
+  form_class = ContactForm
 
+  # new logic!
+  if request.method == 'POST':
+    form = form_class(data=request.POST)
+
+    if form.is_valid():
+      contact_name = request.POST.get('contact_name', '')
+      contact_email = request.POST.get('contact_email', '')
+      form_content = request.POST.get('content', '')
+
+      # Email the profile with the 
+      # contact information
+      template = get_template('contact.html')
+      context = Context({
+        'contact_name': contact_name,
+        'contact_email': contact_email,
+        'form_content': form_content,
+      })
+      content = template.render(context)
+
+      email = EmailMessage(
+        "New contact form submission",
+        content,
+        ['antoninacurafina@gmail.com'],
+        headers = {'Reply-To': contact_email }
+      )
+      email.send()
+      return redirect('contact')
+
+  return TemplateResponse(request, 'contact.html', {
+      'form': form_class,
+  })
 
 
 def maze(request):
@@ -442,7 +455,6 @@ def stack(request):
   if spread > 0.0:
     nice_spread = True
 
-
   bet = Bet_USD_BTC(
     highest_bid = highest_bid[0][1],
     h_bid_stack = highest_bid[0][0],
@@ -454,7 +466,8 @@ def stack(request):
     )
   bet.save()
   
-  return 0
+  time.sleep(60)
+  return stack(request)
 
 
 def current_exchange_rate(request):

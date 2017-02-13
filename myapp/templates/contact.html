@@ -33,32 +33,17 @@
     </div>
   </nav>
 
-  <!-- Content -->
-  <div class="container wrapper">
-    <div class="container">
-    
-      <form action="contact_view" method="post">{% csrf_token %}
-        {{ form.non_field_errors }}
-        <div>
-          <label for="id_subject">Theme:</label>
-          {{ form.subject.errors }}
-          <p>{{ form.subject }}</p>
-        </div>
-        <div>
-          <label for="id_sender">Your e-mail: </label>
-          {{ form.sender.errors }}
-          <p><input type="email" class="form-control username" name="email" required="True"></p>
-        </div>
-        <div>
-          <label for="id_message">Message:</label>
-          {{ form.message.errors }}
-          <p><textarea class="form-control" rows="10" name="message" required="True">
-          </textarea></p>
-        </div>
-        <input type="submit" class="btn btn-primary" value="Send"/>
-      </form>
-    </div>
-  </div>
+
+
+
+  {% block content %}
+  <h1>Contact</h1>
+  <form role="form" action="" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Submit</button>
+  </form>
+  {% endblock %}
 
   <footer style="background-color: #333333;" class="section-inverse">
     <div class="container"> 
