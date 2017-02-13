@@ -443,7 +443,6 @@ def stack(request):
     nice_spread = True
 
 
-
   bet = Bet_USD_BTC(
     highest_bid = highest_bid[0][1],
     h_bid_stack = highest_bid[0][0],
@@ -455,8 +454,7 @@ def stack(request):
     )
   bet.save()
   
-  time.sleep(60)
-  return stack(request)
+  return 0
 
 
 def current_exchange_rate(request):
