@@ -17,6 +17,7 @@ from django.template.loader import get_template
 from django.template.response import TemplateResponse
 from django.template.defaulttags import register
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.contrib.auth.models import User
 from django.db import connection
 from .models import *
 from .forms import *
@@ -175,39 +176,32 @@ def home_page(request):
 
 @csrf_exempt
 def contact_view(request):
-  form_class = ContactForm
-
-  # new logic!
+  form = ContactForm()
   if request.method == 'POST':
-    form = form_class(data=request.POST)
-
+    form = ContactForm(request.POST)
+    # Если форма заполнена корректно, сохраняем все введённые пользователем значения
     if form.is_valid():
-      contact_name = request.POST.get('contact_name', '')
-      contact_email = request.POST.get('contact_email', '')
-      form_content = request.POST.get('content', '')
+      subject = form.cleaned_data['subject']
+      sender = form.cleaned_data['sender']
+      message = form.cleaned_data['message']
+      copy = form.cleaned_data['copy']
 
-      # Email the profile with the 
-      # contact information
-      template = get_template('contact.html')
-      context = Context({
-        'contact_name': contact_name,
-        'contact_email': contact_email,
-        'form_content': form_content,
-      })
-      content = template.render(context)
+      recepients = ['antoninacurafina@gmail.com']
+      # Если пользователь захотел получить копию себе, добавляем его в список получателей
+      if copy:
+          recepients.append(sender)
+      try:
+          send_mail(subject, message, 'antoninacurafina@gmail.com', recepients)
+          return HttpResponseRedirect('.')
+      except BadHeaderError: #Защита от уязвимости
+          return HttpResponse('Invalid header found')
+      # Переходим на другую страницу, если сообщение отправлено
+      return HttpResponseRedirect('.')
 
-      email = EmailMessage(
-        "New contact form submission",
-        content,
-        ['antoninacurafina@gmail.com'],
-        headers = {'Reply-To': contact_email }
-      )
-      email.send()
-      return redirect('contact')
-
-  return TemplateResponse(request, 'contact.html', {
-      'form': form_class,
-  })
+    else:
+        form = ContactForm()
+  # Выводим форму в шаблон
+  return TemplateResponse(request, 'contact.html', {'form': form, 'username': ''})
 
 
 def maze(request):

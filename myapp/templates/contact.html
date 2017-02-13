@@ -33,17 +33,58 @@
     </div>
   </nav>
 
+  <!-- Content -->
+  
+  <div class="container wrapper">
+    <div class="container">
 
+      {% block contactform %}
+        <div class="panel panel-success">
+          <div class="panel-heading">
+            <h2 class="panel-title">Обратная связь</h2>
+          </div>
+          <div class="panel-body">
+            <div class="well well-lg">
+              <h3></h3>
+              <form action="contact_view" method="post">
+                  {% csrf_token %}
+                {#    {% bootstrap_form form %}#}
+                  {{ form.non_field_errors }}
+                <div>
+                  <label for="id_subject">Тема:</label>
+                  {{ form.subject.errors }}
+                  {#    {{ form.subject }}#}
+                    <input class="form-control" id="id_subject" name="subject" placeholder="Тема">
+                </div>
+                  &nbsp;
+                <div>
+                  <label for="id_sender">E-mail:</label>
+                  {{ form.sender.errors }}
+                  {#    {{ form.sender }}#}
+                    <input class="form-control" id="id_sender" name="sender" placeholder="Ваш e-mail">
+                </div>
+                  &nbsp;
+                <div>
+                  <label for="id_message">Сообщение:</label>
+                  {{ form.message.errors }}
+                  {#    {{ form.message }}#}
+                    <textarea class="form-control" id="id_message" name="message" placeholder="Введите ваше сообщение"></textarea>
+                </div>
+                  &nbsp;
+                <div>
+                  {{ form.copy.errors }}
+                  <label for="id_copy">{{ form.copy }} Отправить копию себе </label>
+                </div>
+                  <br>
+                <input type="submit" class="btn btn-success" value="Отправить сообщение"/>
+              </form>
+            </div>
+          </div>
+        </div>
 
-
-  {% block content %}
-  <h1>Contact</h1>
-  <form role="form" action="" method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Submit</button>
-  </form>
-  {% endblock %}
+      {% endblock %}
+    </div>
+  </div>
 
   <footer style="background-color: #333333;" class="section-inverse">
     <div class="container"> 
