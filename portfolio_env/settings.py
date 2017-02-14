@@ -31,7 +31,7 @@ with open(file_path) as f:
     SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'pipni.ga', 'www.pipni.ga']
 
@@ -95,13 +95,11 @@ WSGI_APPLICATION = 'portfolio_env.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-'''module_dir = os.path.dirname(__file__)  # get current directory
+module_dir = os.path.dirname(__file__)  # get current directory
 file_path = os.path.join(module_dir, '/etc/db_pass.txt')
 with open(file_path) as f:
-    db_pass = f.read().strip()'''
-
-with open('/etc/db_pass.txt') as f:
     db_pass = f.read().strip()
+
 
 DATABASES = {
     'default': {
