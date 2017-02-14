@@ -184,20 +184,17 @@ def contact_view(request):
       subject = form.cleaned_data['subject']
       sender = form.cleaned_data['sender']
       message = form.cleaned_data['message']
-      copy = form.cleaned_data['copy']
 
       recepients = ['antoninacurafina@gmail.com']
       # Если пользователь захотел получить копию себе, добавляем его в список получателей
-      if copy:
-          recepients.append(sender)
       try:
-          send_mail(subject, message, 'antoninacurafina@gmail.com', recepients)
+          send_mail(subject, message, sender, recepients)
           print('success')
-          return TemplateResponse(request, 'contact.html')
+          return TemplateResponse(request, 'mail_sent.html')
       except BadHeaderError: #Защита от уязвимости
           return HttpResponse('Invalid header found')
       # Переходим на другую страницу, если сообщение отправлено
-      return TemplateResponse(request, 'contact.html')
+      return TemplateResponse(request, 'mail_sent.html')
 
     else:
         form = ContactForm()
