@@ -186,10 +186,8 @@ def contact_view(request):
       message = form.cleaned_data['message']
 
       recepients = ['antoninacurafina@gmail.com']
-      # Если пользователь захотел получить копию себе, добавляем его в список получателей
       try:
           send_mail(subject, message, sender, recepients)
-          print('success')
           return TemplateResponse(request, 'mail_sent.html')
       except BadHeaderError: #Защита от уязвимости
           return HttpResponse('Invalid header found')
@@ -393,8 +391,8 @@ def stack(request):
 
   ask_chain = dict()
   bid_chain = dict()
-  firstCurrency = 'BTC'
-  secondCurrency = 'ETH'
+  firstCurrency = 'USD'
+  secondCurrency = 'BTC'
   nice_spread = False
 
   exchanges = {
@@ -402,11 +400,6 @@ def stack(request):
       'url': 'https://cex.io/api/ticker/' + secondCurrency + '/' + firstCurrency,
       'ask': 'ask',
       'bid': 'bid',
-    },
-    'LiveCoin': {
-      'url': 'https://api.livecoin.net/exchange/ticker/' + secondCurrency + '/' + firstCurrency,
-      'ask': 'best_ask',
-      'bid': 'best_bid',
     },
     'HitBTC': {
       'url': 'https://api.hitbtc.com/api/1/public/'+ secondCurrency + firstCurrency + '/ticker',
@@ -418,7 +411,6 @@ def stack(request):
       'ask': 2,
       'bid': 0,
     },
-    
   }
 
   for exchange in exchanges:
@@ -438,24 +430,29 @@ def stack(request):
       ask = 0.0
       bid = 0.0
     
+    print(exchange, ask_chain)
 
   lowest_ask = sorted(ask_chain.items(), key=lambda q: q[1])
   highest_bid = sorted(bid_chain.items(), key=lambda q: q[1], reverse=True)
-  
-  spread = highest_bid[0][1] - lowest_ask[0][1]
+
+
+  spread = (highest_bid[0][1] - lowest_ask[0][1])
   pretty_spread = "%0.6f" % spread
   if spread > 0.0:
     nice_spread = True
+
+  print(highest_bid[0][1], lowest_ask[0][1], pretty_spread)
 
   bet = Bet_USD_BTC(
     highest_bid = highest_bid[0][1],
     h_bid_stack = highest_bid[0][0],
     lowest_ask = lowest_ask[0][1],
     l_ask_stack = lowest_ask[0][0],
-    spread = spread,
+    spread = pretty_spread,
     time = datetime.now(),
     nice_spread = nice_spread
     )
+  print(bet)
   bet.save()
   
   time.sleep(60)
@@ -473,14 +470,14 @@ def current_exchange_rate(request):
   l_ask_stack = []
   spread = []
 
-  for z in range(40):
-    highest_bid = "%0.6f" %float(rates[z].highest_bid)
-    lowest_ask = "%0.6f" %float(rates[z].lowest_ask)
+  for z in range(25):
+    highest_bid = "%0.2f" %float(rates[z].highest_bid)
+    lowest_ask = "%0.2f" %float(rates[z].lowest_ask)
     date = str(rates[z].time.strftime("%d.%m.%Y"))
     time = str(rates[z].time.strftime("%I:%M %p"))
     h_bid_stack = str(rates[z].h_bid_stack)
     l_ask_stack = str(rates[z].l_ask_stack)
-    spread = "%0.6f" %float(rates[z].spread)
+    spread = "%0.2f" %float(rates[z].spread)
     bid_data.insert(0, highest_bid)
     ask_data.insert(0, lowest_ask)
     time_data.insert(0, time)
@@ -512,45 +509,3 @@ def get_best_rate(request):
   return HttpResponse(json.dumps(best_rate))
 
 
-'''
-FOR RICKSHAW
-
-
-def current_exchange_rate(request):
-
-  rates = Bet_USD_BTC.objects.order_by('-time')
-  previous_data = []
-  bid_data = []
-  ask_data = []
-
-  for z in range(6):
-    highest_bid = 1 / float(rates[z].highest_bid)
-    lowest_ask = 1 / float(rates[z].lowest_ask)
-    b_d = dict([('x', abs(z-5)), ('y', highest_bid)])
-    a_d = dict([('x', abs(z-5)), ('y', lowest_ask)])
-    bid_data.insert(0, b_d)
-    ask_data.insert(0, a_d)
-
-  previous_data.append(bid_data)
-  previous_data.append(ask_data)
-  
-  response = TemplateResponse(request, 'test.html', ({'previous_data': previous_data}))
-  return response
-
-
-def get_best_rate(request):
-
-  rates = Bet_USD_BTC.objects.order_by('-time')
-  latest_data = []
-  latest_bid_data = {}
-  latest_ask_data = {}
-
-  highest_bid = 1 / float(rates[0].highest_bid)
-  lowest_ask = 1 / float(rates[0].lowest_ask)
-  latest_bid_data = {'y': highest_bid}
-  latest_ask_data = {'y': lowest_ask}
-
-  latest_data.append(latest_bid_data)
-  latest_data.append(latest_ask_data)
-
-  return HttpResponse(json.dumps(latest_data))'''
