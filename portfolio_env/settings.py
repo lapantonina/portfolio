@@ -24,11 +24,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 #SECRET_KEY
-with open('/etc/flickr_api_s_key.txt') as f:
+
+module_dir = os.path.dirname(__file__)  # get current directory
+file_path = os.path.join(module_dir, '/etc/flickr_api_s_key.txt')
+with open(file_path) as f:
     SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'pipni.ga', 'www.pipni.ga']
 
@@ -92,7 +95,9 @@ WSGI_APPLICATION = 'portfolio_env.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-with open('/etc/db_pass.txt') as f:
+module_dir = os.path.dirname(__file__)  # get current directory
+file_path = os.path.join(module_dir, '/etc/db_pass.txt')
+with open(file_path) as f:
     db_pass = f.read().strip()
 
 DATABASES = {
