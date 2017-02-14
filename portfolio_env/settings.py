@@ -157,5 +157,5 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-with open('/static/email_host_password.txt') as f:
+with open('file:///etc/email_host_password.txt') as f:
     EMAIL_HOST_PASSWORD = f.read()
