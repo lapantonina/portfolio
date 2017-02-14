@@ -3,7 +3,7 @@
 
 # Create your views here.
 import os, sys
-import requests, json
+import requests, json, base64
 import textwrap
 import math, time, datetime, random
 import django.shortcuts
@@ -192,11 +192,12 @@ def contact_view(request):
           recepients.append(sender)
       try:
           send_mail(subject, message, 'antoninacurafina@gmail.com', recepients)
-          return HttpResponseRedirect('.')
+          print('success')
+          return TemplateResponse(request, 'contact.html')
       except BadHeaderError: #Защита от уязвимости
           return HttpResponse('Invalid header found')
       # Переходим на другую страницу, если сообщение отправлено
-      return HttpResponseRedirect('.')
+      return TemplateResponse(request, 'contact.html')
 
     else:
         form = ContactForm()

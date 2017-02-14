@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
-import os
+import os, base64
 
 import pymysql
 pymysql.install_as_MySQLdb()
@@ -158,4 +158,4 @@ EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 with open('/etc/email_host_password.txt') as f:
-    EMAIL_HOST_PASSWORD = f.read().strip()
+    EMAIL_HOST_PASSWORD = f.read()
