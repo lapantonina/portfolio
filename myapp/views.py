@@ -394,45 +394,82 @@ def stack(request):
   firstCurrency = 'USD'
   secondCurrency = 'BTC'
   nice_spread = False
-
+  
+  # для каждой биржи: словарь с данными (распаршенный до нужной степени api) + ключи
   exchanges = {
     'CEX.io': {
-      'url': 'https://cex.io/api/ticker/' + secondCurrency + '/' + firstCurrency,
+      'name': 'CEX.io',
+      'data_chain': requests.get('https://cex.io/api/ticker/' + secondCurrency + '/' + firstCurrency).json(),
       'ask': 'ask',
       'bid': 'bid',
     },
+    'cCEX': {
+      'name': 'cCEX',
+      'data_chain': requests.get('https://c-cex.com/t/' + secondCurrency.lower() + '-' + firstCurrency.lower() + '.json').json()['ticker'],
+      'ask': 'sell',
+      'bid': 'buy',
+    },
+    'Poloniex': {
+      'name': 'Poloniex',
+      'data_chain': requests.get('https://poloniex.com/public?command=returnTicker').json()['USDT_BTC'],
+      'ask': 'lowestAsk',
+      'bid': 'highestBid',
+    },
     'HitBTC': {
-      'url': 'https://api.hitbtc.com/api/1/public/'+ secondCurrency + firstCurrency + '/ticker',
+      'name': 'HitBTC',
+      'data_chain': requests.get('https://api.hitbtc.com/api/1/public/'+ secondCurrency + firstCurrency + '/ticker').json(),
       'ask': 'ask',
       'bid': 'bid',
     },
     'BitFinex': {
-      'url': 'https://api.bitfinex.com/v2/ticker/t' + secondCurrency + firstCurrency,
+      'name': 'BitFinex',
+      'data_chain': requests.get('https://api.bitfinex.com/v2/ticker/t' + secondCurrency + firstCurrency).json(),
       'ask': 2,
       'bid': 0,
+    },
+    'Btc-e': {
+      'name': 'Btc-e',
+      'data_chain': requests.get('https://btc-e.com/api/3/ticker/' + secondCurrency.lower() + '_' + firstCurrency.lower()).json()[secondCurrency.lower() + '_' + firstCurrency.lower()],
+      'ask': 'sell',
+      'bid': 'buy',
+    },
+    'XBTCE': {
+      'name': 'XBTCE',
+      'data_chain': requests.get('https://cryptottlivewebapi.xbtce.net:8443/api/v1/public/ticker/' + secondCurrency + firstCurrency).json()[0],
+      'ask': 'BestAsk',
+      'bid': 'BestBid',
+    },
+    'EXMO': {
+      'name': 'EXMO',
+      'data_chain': requests.get('https://api.exmo.com/v1/ticker').json()[secondCurrency + '_' + firstCurrency],
+      'ask': 'sell_price',
+      'bid': 'buy_price',
+    },
+    'Yobit': {
+      'name': 'Yobit',
+      'data_chain': requests.get('https://yobit.net/api/3/ticker/' + secondCurrency.lower() + '_' + firstCurrency.lower()).json()[secondCurrency.lower() + '_' + firstCurrency.lower()],
+      'ask': 'sell',
+      'bid': 'buy',
     },
   }
 
   for exchange in exchanges:
 
-    json_obj = requests.get(exchanges[exchange]['url'])
-
-    parsed_json = json_obj.json()
+    data_chain = exchanges[exchange]['data_chain']
     ask_path = exchanges[exchange]['ask']
     bid_path = exchanges[exchange]['bid']
 
     try:
-      ask = parsed_json[ask_path]
-      bid = parsed_json[bid_path]
-      ask_chain[exchange] = float(ask)
-      bid_chain[exchange] = float(bid)
+      ask_chain[exchange] = ask = float(data_chain[ask_path]) #создаем связку значений "биржа-аск", "биржа-бид"
+      bid_chain[exchange] = bid = float(data_chain[bid_path])
+
     except(KeyError, IndexError):
       ask = 0.0
       bid = 0.0
     
     print(exchange, ask_chain)
 
-  lowest_ask = sorted(ask_chain.items(), key=lambda q: q[1])
+  lowest_ask = sorted(ask_chain.items(), key=lambda q: q[1]) #связки сортируются по значениям от мин. к макс. и наоборот
   highest_bid = sorted(bid_chain.items(), key=lambda q: q[1], reverse=True)
 
 
@@ -441,7 +478,6 @@ def stack(request):
   if spread > 0.0:
     nice_spread = True
 
-  print(highest_bid[0][1], lowest_ask[0][1], pretty_spread)
 
   bet = Bet_USD_BTC(
     highest_bid = highest_bid[0][1],
@@ -452,7 +488,6 @@ def stack(request):
     time = datetime.now(),
     nice_spread = nice_spread
     )
-  print(bet)
   bet.save()
   
   time.sleep(60)
@@ -499,9 +534,9 @@ def get_best_rate(request):
 
   best_rate = {'date': str(rates[0].time.strftime("%d.%m.%Y")),
     'time': str(rates[0].time.strftime("%I:%M %p")), 
-    'highest_bid': "%0.6f" %float(rates[0].highest_bid), 
+    'highest_bid': "%0.2f" %float(rates[0].highest_bid), 
     'h_bid_stack': str(rates[0].h_bid_stack), 
-    'lowest_ask': "%0.6f" %float(rates[0].lowest_ask),
+    'lowest_ask': "%0.2f" %float(rates[0].lowest_ask),
     'l_ask_stack': str(rates[0].l_ask_stack), 
     'spread': float(rates[0].spread)
     }
