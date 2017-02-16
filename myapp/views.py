@@ -172,8 +172,6 @@ def home_page(request):
   return HttpResponse(html)
 
 
-
-
 @csrf_exempt
 def contact_view(request):
   form = ContactForm()
@@ -469,6 +467,7 @@ def stack(request):
     
   lowest_ask = sorted(ask_chain.items(), key=lambda q: q[1]) #связки сортируются по значениям от мин. к макс. и наоборот
   highest_bid = sorted(bid_chain.items(), key=lambda q: q[1], reverse=True)
+  time = datetime.now()
 
   spread = (highest_bid[0][1] - lowest_ask[0][1])
   pretty_spread = "%0.6f" % spread
@@ -482,7 +481,7 @@ def stack(request):
     lowest_ask = lowest_ask[0][1],
     l_ask_stack = lowest_ask[0][0],
     spread = pretty_spread,
-    time = datetime.now(),
+    time = time,
     nice_spread = nice_spread
     )
   bet.save()
