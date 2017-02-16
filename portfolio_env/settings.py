@@ -37,7 +37,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'pipni.ga', 'www.pipni.ga']
 
 CSRF_COOKIE_SECURE = True
 
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
 
 SESSION_COOKIE_DOMAIN = 'www.pipni.ga'
 
