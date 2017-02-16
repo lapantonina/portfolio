@@ -33,7 +33,7 @@ with open(file_path) as f:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'pipni.ga', 'www.pipni.ga']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '185.177.20.198', 'pipni.ga', 'www.pipni.ga']
 
 CSRF_COOKIE_SECURE = True
 
