@@ -31,13 +31,15 @@ with open(file_path) as f:
     SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'pipni.ga', 'www.pipni.ga']
 
 CSRF_COOKIE_SECURE = True
 
 SESSION_COOKIE_SECURE = True
+
+SESSION_COOKIE_DOMAIN = 'www.pipni.ga'
 
 CACHES = {
     'default': {
