@@ -387,6 +387,8 @@ def maze(request):
 
 def stack(request):
 
+  time = datetime.now()
+
   ask_chain = dict()
   bid_chain = dict()
   firstCurrency = 'USD'
@@ -467,7 +469,6 @@ def stack(request):
     
   lowest_ask = sorted(ask_chain.items(), key=lambda q: q[1]) #связки сортируются по значениям от мин. к макс. и наоборот
   highest_bid = sorted(bid_chain.items(), key=lambda q: q[1], reverse=True)
-  time = datetime.now()
 
   spread = (highest_bid[0][1] - lowest_ask[0][1])
   pretty_spread = "%0.6f" % spread
