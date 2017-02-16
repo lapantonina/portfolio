@@ -485,12 +485,9 @@ def stack(request):
     )
   bet.save()
   
-  time.sleep(60)
-  return stack(request)
-
-  '''
+  
   return TemplateResponse(request, '404.html')
-  response.status_code = 404'''
+  response.status_code = 404
 
 
 def current_exchange_rate(request):
