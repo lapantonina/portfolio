@@ -487,32 +487,45 @@ def stack(request):
 def current_exchange_rate(request):
 
   rates = Bet_USD_BTC.objects.order_by('-time')
+  
   previous_data = []
-  bid_data = []
-  ask_data = []
+
+  date_data = []
   time_data = []
-  h_bid_stack = []
-  l_ask_stack = []
-  spread = []
+  bid_data = []
+  b_stack_data = []
+  ask_data = []
+  a_stack_data = []
+  spread_data = []
 
   for z in range(25):
-    highest_bid = "%0.2f" %float(rates[z].highest_bid)
-    lowest_ask = "%0.2f" %float(rates[z].lowest_ask)
     date = str(rates[z].time.strftime("%d.%m.%Y"))
     time = str(rates[z].time.strftime("%I:%M %p"))
-    h_bid_stack = str(rates[z].h_bid_stack)
-    l_ask_stack = str(rates[z].l_ask_stack)
-    spread = "%0.2f" %float(rates[z].spread)
-    bid_data.insert(0, highest_bid)
-    ask_data.insert(0, lowest_ask)
-    time_data.insert(0, time)
 
-  previous_data.append(bid_data)
-  previous_data.append(ask_data)
+    highest_bid = "%0.2f" %float(rates[z].highest_bid)
+    h_bid_stack = str(rates[z].h_bid_stack)
+
+    lowest_ask = "%0.2f" %float(rates[z].lowest_ask)
+    l_ask_stack = str(rates[z].l_ask_stack)
+
+    spread = "%0.2f" %float(rates[z].spread)
+
+    date_data.insert(0, date)
+    time_data.insert(0, time)
+    bid_data.insert(0, highest_bid)
+    b_stack_data.insert(0, h_bid_stack)
+    ask_data.insert(0, lowest_ask)
+    a_stack_data.insert(0, l_ask_stack)
+    spread_data.insert(0, spread)
+    
+
+  previous_data.append(date_data)
   previous_data.append(time_data)
-  previous_data.append(h_bid_stack)
-  previous_data.append(l_ask_stack)
-  previous_data.append(spread)
+  previous_data.append(bid_data)
+  previous_data.append(b_stack_data)
+  previous_data.append(ask_data)
+  previous_data.append(a_stack_data)
+  previous_data.append(spread_data)
   
   response = TemplateResponse(request, 'USD-BTC_exchange_rate.html', ({'previous_data': previous_data}))
   return response

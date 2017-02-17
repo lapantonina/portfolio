@@ -11,7 +11,6 @@
   <title>USD/BTC Exchange Rate</title>  
   <!-- Bootstrap Core CSS -->
   <link href="/static/css/bootstrap.min.css" rel="stylesheet">
-  <link type="text/css" rel="stylesheet" href="/static/vendor/src/css/legend.css">
   <!-- Custom CSS -->
   <link href="/static/css/custom.css" rel="stylesheet">
 
@@ -34,11 +33,92 @@
   height: 100%;
   border-radius: 5px;
 }
+
+
+.form-control[readonly] {
+    cursor: auto;
+    margin-bottom: 12px;
+}
+
+h4 {
+  margin-bottom: 20px;
+}
 </style>
 
 </head>
 
 <body data-spy="scroll" data-target="#navigation" data-offset="120">
+
+<script src="/static/js/charts.js"></script>
+<script type="text/javascript">
+
+  let previous_data = {% autoescape off %}{{ previous_data }}{% endautoescape %};
+  window.onload = function () {
+    let canvas = document.getElementById('updating-chart'),
+      ctx = canvas.getContext('2d'),
+      startingData = {
+        date: previous_data[0],
+        labels: previous_data[1],
+        spread: previous_data[6],
+        datasets: [
+            {
+                label: 'highest_bid',
+                fillColor: "rgba(133,187,0,0.2)",
+                strokeColor: "rgba(133,187,0,1)",
+                pointColor: "rgba(133,187,0,1)",
+                pointStrokeColor: "#fff",
+                data: previous_data[2],
+                h_bid_stack: previous_data[3],
+            },
+            {
+                label: 'lowest_ask',
+                fillColor: "rgba(199,87,37,0.1)",
+                strokeColor: "rgba(199,87,37,1)",
+                pointColor: "rgba(199,87,37,1)",
+                pointStrokeColor: "#fff",
+                data: previous_data[4],
+                l_ask_stack: previous_data[5], 
+            }
+        ],
+        
+      },
+      date = startingData.date[24];
+      latestLabel = startingData.labels[24];
+      lowest_ask = startingData.datasets[1]['data'][24];
+      l_ask_stack = startingData.datasets[1]['l_ask_stack'][24];
+      highest_bid = startingData.datasets[0]['data'][24];
+      h_bid_stack = startingData.datasets[0]['h_bid_stack'][24];
+      spread = startingData.spread[24];
+      document.getElementById("time").value = `${date}, ${latestLabel}`;
+      document.getElementById("lowest_ask").value = `${lowest_ask} (${l_ask_stack})`;
+      document.getElementById("highest_bid").value = `${highest_bid} (${h_bid_stack})`;
+      document.getElementById("spread").value = `\$${spread}`;
+
+  let myLiveChart = new Chart(ctx).Line(startingData, {animationSteps: 20});
+  document.getElementById("legend").innerHTML = myLiveChart.generateLegend();
+  setInterval(function() {
+    $( function() {
+      $( function() {
+        let data = ''
+        let respond = $.get( "/get_best_rate.html", data, success, "json");
+      } );
+      function success( respond ) {
+        let lowest_ask = respond.lowest_ask
+        let highest_bid = respond.highest_bid;
+        let latestLabel = respond.time;
+        myLiveChart.addData([highest_bid,lowest_ask], latestLabel);
+        document.getElementById("time").value = `${date}, ${latestLabel}`;
+        document.getElementById("lowest_ask").value = `${lowest_ask} (${l_ask_stack})`;
+        document.getElementById("highest_bid").value = `${highest_bid} (${h_bid_stack})`;
+        document.getElementById("spread").value = `\$${spread}`;
+        myLiveChart.removeData();
+        }
+      } )
+    }, 60000);
+    
+  }
+</script>
+
 
   <!-- Navigation -->
   <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -65,77 +145,33 @@
       </div>
       
       <div class="row">
-        <div id="legend" class="container col-md-3 label-box">
+        <div id="legend" class="container col-md-3 label-box"">
         </div>
         <div class="container col-md-9">
           <p>The graph shows the highest bid and lowest ask (excluding fee) among the following exchanges: EXMO, Yobit, HitBTC, BitFinex, cCEX, XBTCE, CEX.io, Btc-e.</p>
           <p>
         </div>
+      </div>
 
-      </div> 
       <div class="row">
-        <div class="container">
-          <div id="chartContainer" class="row" style="height: 500px; width: 100%; margin: 20px 0 auto ">
-            <script src="/static/js/charts.js"></script>
-            <canvas id="updating-chart" width="1140" height="500"></canvas>
-
-              <script type="text/javascript">
-
-                let previous_data = {% autoescape off %}{{ previous_data }}{% endautoescape %};
-                window.onload = function () {
-                  let canvas = document.getElementById('updating-chart'),
-                    ctx = canvas.getContext('2d'),
-                    startingData = {
-                      labels: previous_data[2],
-                      datasets: [
-                          {
-                              label: 'highest_bid',
-                              fillColor: "rgba(133,187,0,0.2)",
-                              strokeColor: "rgba(133,187,0,1)",
-                              pointColor: "rgba(133,187,0,1)",
-                              pointStrokeColor: "#fff",
-                              data: previous_data[0],
-                              spread: previous_data[5]
-                          },
-                          {
-                              label: 'lowest_ask',
-                              fillColor: "rgba(199,87,37,0.1)",
-                              strokeColor: "rgba(199,87,37,1)",
-                              pointColor: "rgba(199,87,37,1)",
-                              pointStrokeColor: "#fff",
-                              data: previous_data[1],
-                              spread: previous_data[5]
-                          }
-                      ],
-                      
-                    },
-                    latestLabel = startingData.labels[6];
-                // Reduce the animation steps for demo clarity.
-                let myLiveChart = new Chart(ctx).Line(startingData, {animationSteps: 15});
-                document.getElementById("legend").innerHTML = myLiveChart.generateLegend();
-                setInterval(function() {
-                  $( function() {
-                    $( function() {
-                      let data = ''
-                      let respond = $.get( "/get_best_rate.html", data, success, "json");
-                    } );
-                    function success( respond ) {
-                      let lowest_ask = respond.lowest_ask
-                      let highest_bid = respond.highest_bid;
-                      let latestLabel = respond.time;
-                      myLiveChart.addData([highest_bid,lowest_ask], latestLabel);
-                      myLiveChart.removeData();
-                      }
-                    } )
-                  }, 60000);
-                  
-                }
-
-              </script>
-            </div>
-          </div>
+        <div class="col-md-10">
+          <canvas id="updating-chart" style="padding-right: 12px">
+          </canvas>
+        </div>
+        <div id="latest_data" class="col-md-2">
+        
+          <h4>Latest data</h4>
+          <b>Time:</b>
+            <input id="time" type="text" class="form-control" readonly="true"></input>
+          <b>Highest bid:</b>
+            <input id="highest_bid" type="text" class="form-control" readonly="true"></input>
+          <b>Lowest ask:</b>
+            <input id="lowest_ask" type="text" class="form-control" readonly="true"></input>
+          <b>Spread:</b>
+            <input id="spread" type="text" class="form-control" readonly="true"></input>
         </div>
       </div>
+
     </div>
   </div>
 
@@ -145,7 +181,6 @@
       <div class="row copyright">
         <div class="col-md-6">
         <p>&copy;2017 Loutique</p>
-        <p>{{ best_rate }}</p>
         </div>
         <div class="col-md-6">
         <p class="credit">Template by <a href="http://bootstrapious.com/landing-pages">Bootstrapious &mdash; Bootstrap Landing Pages</a></p>
