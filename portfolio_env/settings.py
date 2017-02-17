@@ -160,6 +160,7 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_URL = '/static/'
+STATIC_ROOT = STATIC_URL + 'admin/'
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'antoninacurafina@gmail.com'

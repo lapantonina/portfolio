@@ -407,12 +407,6 @@ def stack(request):
       'ask': 'sell',
       'bid': 'buy',
     },
-    'Poloniex': {
-      'name': 'Poloniex',
-      'data_chain': requests.get('https://poloniex.com/public?command=returnTicker').json()['USDT_BTC'],
-      'ask': 'lowestAsk',
-      'bid': 'highestBid',
-    },
     'HitBTC': {
       'name': 'HitBTC',
       'data_chain': requests.get('https://api.hitbtc.com/api/1/public/'+ secondCurrency + firstCurrency + '/ticker').json(),
@@ -539,4 +533,13 @@ def get_best_rate(request):
 
   return HttpResponse(json.dumps(best_rate))
 
+'''
 
+    'Poloniex': {
+      'name': 'Poloniex',
+      'data_chain': requests.get('https://poloniex.com/public?command=returnTicker').json()['USDT_BTC'],
+      'ask': 'lowestAsk',
+      'bid': 'highestBid',
+    },
+
+'''
