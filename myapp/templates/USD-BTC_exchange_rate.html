@@ -106,6 +106,9 @@ h4 {
         let lowest_ask = respond.lowest_ask
         let highest_bid = respond.highest_bid;
         let latestLabel = respond.time;
+        let l_ask_stack = respond.l_ask_stack;
+        let h_bid_stack = respond.h_bid_stack;
+        let spread = respond.spread;
         myLiveChart.addData([highest_bid,lowest_ask], latestLabel);
         document.getElementById("time").value = `${date}, ${latestLabel}`;
         document.getElementById("lowest_ask").value = `${lowest_ask} (${l_ask_stack})`;
