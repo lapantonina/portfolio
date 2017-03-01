@@ -139,6 +139,8 @@ def user_photos(request):
         photo_id = str(item['id'])
         secret = str(item['secret'])
         title = str(item['title'])
+        if title == '':
+          title = '--no name--'
 
         photo_list.append('<div class="col-sm-2"><div class="box"><a href="https://farm' + farm + '.staticflickr.com/' + server + \
           '/' + photo_id + '_' + secret + '_z.jpg" alt="' + title + '" data-toggle="lightbox" data-gallery="portfolio" data-title="' + \
@@ -541,7 +543,7 @@ def get_best_rate(request):
     'h_bid_stack': str(rates[0].h_bid_stack), 
     'lowest_ask': "%0.2f" %float(rates[0].lowest_ask),
     'l_ask_stack': str(rates[0].l_ask_stack), 
-    'spread': float(rates[0].spread)
+    'spread': "%0.2f" %float(rates[0].spread)
     }
 
   return HttpResponse(json.dumps(best_rate))
